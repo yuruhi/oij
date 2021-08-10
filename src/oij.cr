@@ -124,7 +124,7 @@ module OIJ
 
     parser.on("d", "download testcases") do
       parser.banner = "Usage: oij d"
-      download(Path[Dir.current], config)
+      download(config)
     end
 
     parser.on("s", "submit code") do
@@ -148,8 +148,17 @@ module OIJ
 
     parser.on("p", "download testcases and generate templates") do
       parser.banner = "Usage: oij p"
-      download(Path[Dir.current], config)
-      generate_all_templates(config)
+      prepare(Path[Dir.current], config)
+    end
+
+    parser.on("p+", "downolad testcase and generate templates for next problem") do
+      parser.banner = "Usage: oij p+"
+      prepare(get_next_directory(Path[Dir.current], config), config)
+    end
+
+    parser.on("p-", "downolad testcase and generate templates for prev problem") do
+      parser.banner = "Usage: oij p-"
+      prepare(get_prev_directory(Path[Dir.current], config), config)
     end
 
     parser.on("bundle", "bundle") do

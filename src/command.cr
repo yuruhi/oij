@@ -1,6 +1,7 @@
 require "yaml"
 require "./utility"
 require "./url"
+require "./template"
 
 module OIJ
   def self.execute_command(file : Path, input_file : Path?, config : YAML::Any) : String
@@ -55,12 +56,12 @@ module OIJ
     system "oj test -c '#{execute_command(file, nil, config)}'"
   end
 
-  def self.download(directory : Path, config : YAML::Any) : Nil
-    system "oj d #{get_url(directory, config)}"
+  def self.download(config : YAML::Any) : Nil
+    system "oj d #{get_url(Path[Dir.current], config)}"
   end
 
   def self.submit(file : Path, directory : Path, config : YAML::Any) : Nil
-    system "oj s #{get_url(directory, config)} #{file}"
+    system "cd #{directory} && oj s #{get_url(directory, config)} #{file}"
   end
 
   def self.bundle(file : Path, config : YAML::Any) : Nil
@@ -71,5 +72,11 @@ module OIJ
   def self.bundle_and_submit(file : Path, directory : Path, config : YAML::Any) : Nil
     bundled = bundled_file(file, config)
     submit(Path[bundled.path], directory, config)
+  end
+
+  def self.prepare(directory : Path, config : YAML::Any) : Nil
+    Dir.cd(directory)
+    download(config)
+    generate_all_templates(config)
   end
 end
