@@ -62,4 +62,9 @@ module OIJ
   def self.submit(file : Path, directory : Path, config : YAML::Any) : Nil
     system "oj s #{get_url(directory, config)} #{file}"
   end
+
+  def self.bundle(file : Path, config : YAML::Any) : Nil
+    bundler = config["bundler"]?.try(&.[file.extension[1..]]?) || error("Not found bundler for #{file.extension}")
+    system "#{bundler} #{file}"
+  end
 end

@@ -131,6 +131,14 @@ module OIJ
       generate_all_templates(config)
     end
 
+    parser.on("bundle", "bundle") do
+      parser.banner = "Usage: oij bundle file"
+      parser.unknown_args do |files|
+        file = Path[files[0]]
+        bundle(file, config)
+      end
+    end
+
     parser.parse(args)
   end
 end
