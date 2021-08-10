@@ -104,4 +104,45 @@ module OIJ
       "https://yukicoder.me/problems/#{number}"
     end
   end
+
+  struct CodeforcesProblem < Problem
+    getter contest : String, problem : String
+
+    def initialize(@contest, @problem)
+    end
+
+    def self.from_directory?(directory : Path, config : YAML::Any) : self?
+      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+                OIJ.error("Not found [path][codeforces] in config")
+      if directory.parent.parent == codeforces
+        CodeforcesProblem.new directory.parent.basename, directory.basename
+      end
+    end
+
+    def self.from_url?(url : String) : self?
+      if url =~ %r[^https://codeforces.com/contest/(.+)/problem/(.+)$]
+        CodeforcesProblem.new $1, $2
+      end
+    end
+
+    def succ
+      next_problem = problem[...-1] + problem[-1].succ
+      AtCoderProblem.new contest, next_problem
+    end
+
+    def pred
+      next_problem = problem[...-1] + problem[-1].pred
+      AtCoderProblem.new contest, next_problem
+    end
+
+    def to_directory(config : YAML::Any) : Path
+      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+                OIJ.error("Not found [path][codeforces] in config")
+      codeforces / contest / problem
+    end
+
+    def to_url : String
+      "https://codeforces.com/contest/#{contest}/problem/#{problem}"
+    end
+  end
 end
