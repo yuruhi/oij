@@ -6,8 +6,8 @@ require "./template"
 module OIJ
   def self.execute_command(file : Path, input_file : Path?, config : YAML::Any) : String
     extension = file.extension[1..]
-    if command = config["execute"]?.try &.[extension]?.try &.as_s
-      command = command.gsub("${file}", file)
+    if command = config.dig?("execute", extension)
+      command = command.as_s.gsub("${file}", file)
       if input_file
         error("Not found input file: #{input_file}") unless File.exists?(input_file)
         "#{command} < #{input_file}"
@@ -21,8 +21,8 @@ module OIJ
 
   def self.compile_command?(file : Path, config : YAML::Any) : String?
     extension = file.extension[1..]
-    if command = config["compile"]?.try &.[extension]?.try &.as_s
-      command.gsub("${file}", file)
+    if command = config.dig?("compile", extension)
+      command.as_s.gsub("${file}", file)
     end
   end
 
@@ -65,7 +65,8 @@ module OIJ
   end
 
   def self.bundle(file : Path, config : YAML::Any) : Nil
-    bundler = config["bundler"]?.try(&.[file.extension[1..]]?) || error("Not found bundler for #{file.extension}")
+    bundler = config.dig?("bundler", file.extension[1..]) ||
+              error("Not found bundler for #{file.extension}")
     system "#{bundler} #{file}"
   end
 

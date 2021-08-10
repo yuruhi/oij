@@ -1,6 +1,6 @@
 module OIJ
   def self.generate_template(ext : String, config : YAML::Any) : Nil
-    if template_name = config["template"]?.try &.[ext]?
+    if template_name = config.dig?("template", ext)
       template, name = template_name.as_a
       template, name = Path[template.as_s], Path[name.as_s]
       if File.exists?(template)

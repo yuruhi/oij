@@ -44,7 +44,8 @@ module OIJ
   end
 
   def self.bundled_file(file : Path, config : YAML::Any) : File
-    bundler = config["bundler"]?.try(&.[file.extension[1..]]?) || error("Not found bundler for #{file.extension}")
+    bundler = config.dig?("bundler", file.extension[1..]) ||
+              error("Not found bundler for #{file.extension}")
     File.tempfile("bundled", file.extension) do |tmp|
       command = "#{bundler} #{file}"
       info("$ #{command}")
