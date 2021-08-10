@@ -4,6 +4,7 @@ require "./command"
 require "./file"
 require "./testcase"
 require "./url"
+require "./template"
 
 module OIJ
   VERSION = "0.1.0"
@@ -111,6 +112,23 @@ module OIJ
         file = Path[files[0]]
         submit(file, Path[Dir.current], config)
       end
+    end
+
+    parser.on("template", "generate templates") do
+      parser.banner = "Usage: oij template [extension]"
+      parser.unknown_args do |extensions|
+        if extensions.empty?
+          generate_all_templates(config)
+        else
+          extensions.each { |extension| generate_template(extension, config) }
+        end
+      end
+    end
+
+    parser.on("p", "download testcases and generate templates") do
+      parser.banner = "Usage: oij p"
+      download(Path[Dir.current], config)
+      generate_all_templates(config)
     end
 
     parser.parse(args)
