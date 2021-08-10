@@ -67,4 +67,9 @@ module OIJ
     bundler = config["bundler"]?.try(&.[file.extension[1..]]?) || error("Not found bundler for #{file.extension}")
     system "#{bundler} #{file}"
   end
+
+  def self.bundle_and_submit(file : Path, directory : Path, config : YAML::Any) : Nil
+    bundled = bundled_file(file, config)
+    submit(Path[bundled.path], directory, config)
+  end
 end

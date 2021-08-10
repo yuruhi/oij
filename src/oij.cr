@@ -110,7 +110,7 @@ module OIJ
       parser.banner = "Usage: oij s file"
       parser.unknown_args do |files|
         file = Path[files[0]]
-        submit(file, Path[Dir.current], config)
+        bundle_and_submit(file, Path[Dir.current], config)
       end
     end
 
