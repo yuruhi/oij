@@ -147,8 +147,14 @@ module OIJ
     end
 
     parser.on("p", "download testcases and generate templates") do
-      parser.banner = "Usage: oij p"
-      prepare(Path[Dir.current], config)
+      parser.banner = "Usage: oij p [url]"
+      parser.unknown_args do |args|
+        if args.empty?
+          prepare(Path[Dir.current], config)
+        else
+          prepare(args[0], config)
+        end
+      end
     end
 
     parser.on("p+", "downolad testcase and generate templates for next problem") do

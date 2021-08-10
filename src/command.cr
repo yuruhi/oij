@@ -80,4 +80,12 @@ module OIJ
     download(config)
     generate_all_templates(config)
   end
+
+  def self.prepare(url : String, config : YAML::Any) : Nil
+    directory = Problem.from_url?(url).try(&.to_directory(config)) ||
+                error("Invalid url: #{url}")
+    Dir.cd(directory)
+    download(config)
+    generate_all_templates(config)
+  end
 end
