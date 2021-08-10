@@ -5,6 +5,7 @@ require "./file"
 require "./testcase"
 require "./url"
 require "./template"
+require "./directory"
 
 module OIJ
   VERSION = "0.1.0"
@@ -99,6 +100,26 @@ module OIJ
     parser.on("url", "get url for current directory") do
       parser.banner = "Usage: oij url"
       puts get_url(Path[Dir.current], config)
+    end
+
+    parser.on("url+", "get next url for current directory") do
+      parser.banner = "Usage: oij url+"
+      puts get_next_url(Path[Dir.current], config)
+    end
+
+    parser.on("url-", "get previous url for current directory") do
+      parser.banner = "Usage: oij url-"
+      puts get_prev_url(Path[Dir.current], config)
+    end
+
+    parser.on("dir+", "get directory for next problem") do
+      parser.banner = "Usage: oij dir+"
+      puts get_next_directory(Path[Dir.current], config)
+    end
+
+    parser.on("dir-", "get directory for next problem") do
+      parser.banner = "Usage: oij dir-"
+      puts get_prev_directory(Path[Dir.current], config)
     end
 
     parser.on("d", "download testcases") do
