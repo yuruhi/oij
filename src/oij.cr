@@ -153,12 +153,14 @@ module OIJ
 
     parser.on("p+", "downolad testcase and generate templates for next problem") do
       parser.banner = "Usage: oij p+"
-      prepare(get_next_directory(Path[Dir.current], config), config)
+      next_dir = get_next_directory(Path[Dir.current], config)
+      prepare(next_dir, config)
     end
 
     parser.on("p-", "downolad testcase and generate templates for prev problem") do
       parser.banner = "Usage: oij p-"
-      prepare(get_prev_directory(Path[Dir.current], config), config)
+      prev_dir = get_prev_directory(Path[Dir.current], config)
+      prepare(prev_dir, config)
     end
 
     parser.on("bundle", "bundle") do
