@@ -2,24 +2,30 @@ require "yaml"
 require "./utility"
 
 module OIJ
-  abstract struct Service
+  abstract struct Problem
     abstract def succ
     abstract def pred
     abstract def to_directory(config : YAML::Any) : Path
     abstract def to_url : String
 
     def self.from_directory?(directory : Path, config : YAML::Any) : self?
-      {% begin %}
-        {% for service in @type.all_subclasses %}
-          service = {{service}}.from_directory?(directory, config)
-          return service if service
-        {% end %}
+      {% for service in @type.all_subclasses %}
+        service = {{service}}.from_directory?(directory, config)
+        return service if service
+      {% end %}
+      nil
+    end
+
+    def self.from_url?(url : String) : self?
+      {% for service in @type.all_subclasses %}
+        service = {{service}}.from_url?(url)
+        return service if service
       {% end %}
       nil
     end
   end
 
-  struct AtCoder < Service
+  struct AtCoderProblem < Problem
     getter contest : String, problem : String
 
     def initialize(@contest, @problem)
@@ -29,18 +35,24 @@ module OIJ
       atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
                 OIJ.error("Not found [path][atcoder] in config")
       if directory.parent.parent == atcoder
-        AtCoder.new directory.parent.basename, directory.basename
+        AtCoderProblem.new directory.parent.basename, directory.basename
+      end
+    end
+
+    def self.from_url?(url : String) : self?
+      if url =~ %r[^https://atcoder.jp/contests/(.+)/tasks/(.+)$]
+        AtCoderProblem.new $1, $2
       end
     end
 
     def succ
       next_problem = problem[...-1] + problem[-1].succ
-      AtCoder.new contest, next_problem
+      AtCoderProblem.new contest, next_problem
     end
 
     def pred
       next_problem = problem[...-1] + problem[-1].pred
-      AtCoder.new contest, next_problem
+      AtCoderProblem.new contest, next_problem
     end
 
     def to_directory(config : YAML::Any) : Path
@@ -54,7 +66,7 @@ module OIJ
     end
   end
 
-  struct Yukicoder < Service
+  struct YukicoderProblem < Problem
     getter number : Int32
 
     def initialize(@number)
@@ -64,16 +76,22 @@ module OIJ
       yukicoder = config.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
                   OIJ.error("Not found [path][yukicoder] in config")
       if directory.parent == yukicoder
-        Yukicoder.new directory.basename.to_i
+        YukicoderProblem.new directory.basename.to_i
+      end
+    end
+
+    def self.from_url?(url : String) : self?
+      if url =~ %r[^https://yukicoder.me/problems/(\d+)$]
+        YukicoderProblem.new $1.to_i
       end
     end
 
     def succ
-      Yukicoder.new number + 1
+      YukicoderProblem.new number + 1
     end
 
     def pred
-      Yukicoder.new number - 1
+      YukicoderProblem.new number - 1
     end
 
     def to_directory(config : YAML::Any) : Path

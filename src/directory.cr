@@ -4,7 +4,7 @@ require "./utility"
 
 module OIJ
   def self.get_next_directory?(directory : Path, config : YAML::Any) : Path?
-    Service.from_directory?(directory, config).try &.succ.to_directory(config)
+    Problem.from_directory?(directory, config).try &.succ.to_directory(config)
   end
 
   def self.get_next_directory(directory : Path, config : YAML::Any) : Path
@@ -12,7 +12,7 @@ module OIJ
   end
 
   def self.get_prev_directory?(directory : Path, config : YAML::Any) : Path?
-    Service.from_directory?(directory, config).try &.pred.to_directory(config)
+    Problem.from_directory?(directory, config).try &.pred.to_directory(config)
   end
 
   def self.get_prev_directory(directory : Path, config : YAML::Any) : Path
