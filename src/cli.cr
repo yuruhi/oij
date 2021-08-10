@@ -1,0 +1,3 @@
+require "./oij"
+
+OIJ.run
