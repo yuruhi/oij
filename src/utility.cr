@@ -1,7 +1,7 @@
 require "colorize"
 
 module OIJ
-  private def self.put_message(title, color, message)
+  private def self.put_message(title, color, message) : Nil
     STDERR << '[' << title.colorize(color) << ']' << ' ' << message << '\n'
   end
 

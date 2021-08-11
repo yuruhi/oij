@@ -41,19 +41,20 @@ module OIJ
 
     def download(silent = false) : Nil
       Dir.cd(to_directory)
-      system silent ? "oj d #{to_url} > #{File::NULL}" : "oj d #{to_url}"
+      success = OIJ.system silent ? "oj d #{to_url} > #{File::NULL}" : "oj d #{to_url}"
+      OIJ.warning("Failed to download: #{to_url}") unless success
     end
 
     def submit(file : Path) : Nil
       Dir.cd(to_directory)
-      system "oj s #{to_url} #{file}"
+      OIJ.system "oj s #{to_url} #{file}"
     end
 
     def bundle(file : Path) : Nil
       Dir.cd(to_directory)
       bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
                 OIJ.error("Not found bundler for #{file.extension}")
-      system "#{bundler} #{file}"
+      OIJ.system "#{bundler} #{file}"
     end
 
     def bundle_and_submit(file : Path) : Nil
