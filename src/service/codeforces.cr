@@ -7,8 +7,8 @@ module OIJ
     def initialize(@contest, @problem)
     end
 
-    def self.from_directory?(directory : Path, config : YAML::Any) : self?
-      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+    def self.from_directory?(directory : Path) : self?
+      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
                    OIJ.error("Not found [path][codeforces] in config")
       if directory.parent.parent == codeforces
         CodeforcesProblem.new directory.parent.basename, directory.basename
@@ -55,8 +55,8 @@ module OIJ
       end
     end
 
-    def to_directory(config : YAML::Any) : Path
-      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+    def to_directory : Path
+      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
                    OIJ.error("Not found [path][codeforces] in config")
       codeforces / contest / problem
     end
@@ -69,8 +69,8 @@ module OIJ
   struct CodeforcesContest < Contest
     getter contest : String
 
-    def self.from_directory?(directory : Path, config : YAML::Any) : self?
-      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+    def self.from_directory?(directory : Path) : self?
+      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
                    OIJ.error("Not found [path][codeforces] in config")
       if directory.parent == codeforces
         CodeforcesContest.new directory.basename
@@ -93,8 +93,8 @@ module OIJ
       }
     end
 
-    def to_directory(config : YAML::Any) : Path
-      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+    def to_directory : Path
+      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
                    OIJ.error("Not found [path][codeforces] in config")
       codeforces / contest
     end

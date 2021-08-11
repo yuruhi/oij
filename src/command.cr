@@ -4,9 +4,9 @@ require "./url"
 require "./template"
 
 module OIJ
-  def self.execute_command(file : Path, input_file : Path?, config : YAML::Any) : String
+  def self.execute_command(file : Path, input_file : Path?) : String
     extension = file.extension[1..]
-    if command = config.dig?("execute", extension)
+    if command = OIJ::Config.get.dig?("execute", extension)
       command = command.as_s.gsub("${file}", file)
       if input_file
         error("Not found input file: #{input_file}") unless File.exists?(input_file)
@@ -19,59 +19,59 @@ module OIJ
     end
   end
 
-  def self.compile_command?(file : Path, config : YAML::Any) : String?
+  def self.compile_command?(file : Path) : String?
     extension = file.extension[1..]
-    if command = config.dig?("compile", extension)
+    if command = OIJ::Config.get.dig?("compile", extension)
       command.as_s.gsub("${file}", file)
     end
   end
 
-  def self.compile?(file : Path, config : YAML::Any) : Bool
-    command = compile_command?(file, config) || return true
+  def self.compile?(file : Path) : Bool
+    command = compile_command?(file) || return true
     system command
   end
 
-  def self.compile(file : Path, config : YAML::Any) : Bool
-    command = compile_command?(file, config) ||
+  def self.compile(file : Path) : Bool
+    command = compile_command?(file) ||
               error("Not found compile command: #{file.extension}")
     system command
   end
 
-  def self.execute(file : Path, input_file : String?, config : YAML::Any)
-    input_file = normalize_input_file(input_file, config) if input_file
-    system execute_command(file, input_file, config)
+  def self.execute(file : Path, input_file : String?)
+    input_file = normalize_input_file(input_file) if input_file
+    system execute_command(file, input_file)
   end
 
-  def self.run(file : Path, input_file : String?, config : YAML::Any)
-    compile?(file, config) || error("Compile error")
-    execute(file, input_file, config)
+  def self.run(file : Path, input_file : String?)
+    compile?(file) || error("Compile error")
+    execute(file, input_file)
   end
 
-  def self.test(file : Path, config : YAML::Any)
-    system "oj test -c '#{execute_command(file, nil, config)}'"
+  def self.test(file : Path)
+    system "oj test -c '#{execute_command(file, nil)}'"
   end
 
-  def self.compile_and_test(file : Path, config : YAML::Any)
-    compile?(file, config) || error("Compile error")
-    system "oj test -c '#{execute_command(file, nil, config)}'"
+  def self.compile_and_test(file : Path)
+    compile?(file) || error("Compile error")
+    system "oj test -c '#{execute_command(file, nil)}'"
   end
 
-  def self.download(config : YAML::Any) : Nil
-    system "oj d #{get_url(Path[Dir.current], config)} > #{File::NULL}"
+  def self.download : Nil
+    system "oj d #{get_url(Path[Dir.current])} > #{File::NULL}"
   end
 
-  def self.submit(file : Path, directory : Path, config : YAML::Any) : Nil
-    system "cd #{directory} && oj s #{get_url(directory, config)} #{file}"
+  def self.submit(file : Path, directory : Path) : Nil
+    system "cd #{directory} && oj s #{get_url(directory)} #{file}"
   end
 
-  def self.bundle(file : Path, config : YAML::Any) : Nil
-    bundler = config.dig?("bundler", file.extension[1..]) ||
+  def self.bundle(file : Path) : Nil
+    bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
               error("Not found bundler for #{file.extension}")
     system "#{bundler} #{file}"
   end
 
-  def self.bundle_and_submit(file : Path, directory : Path, config : YAML::Any) : Nil
-    bundled = bundled_file(file, config)
-    submit(Path[bundled.path], directory, config)
+  def self.bundle_and_submit(file : Path, directory : Path) : Nil
+    bundled = bundled_file(file)
+    submit(Path[bundled.path], directory)
   end
 end

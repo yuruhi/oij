@@ -7,8 +7,8 @@ module OIJ
     def initialize(@contest, @problem)
     end
 
-    def self.from_directory?(directory : Path, config : YAML::Any) : self?
-      atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
+    def self.from_directory?(directory : Path) : self?
+      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
                 OIJ.error("Not found [path][atcoder] in config")
       if directory.parent.parent == atcoder
         AtCoderProblem.new directory.parent.basename, directory.basename
@@ -56,8 +56,8 @@ module OIJ
       end
     end
 
-    def to_directory(config : YAML::Any) : Path
-      atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
+    def to_directory : Path
+      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
                 OIJ.error("Not found [path][atcoder] in config")
       atcoder / contest / problem
     end
@@ -70,8 +70,8 @@ module OIJ
   struct AtCoderContest < Contest
     getter contest : String
 
-    def self.from_directory?(directory : Path, config : YAML::Any) : self?
-      atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
+    def self.from_directory?(directory : Path) : self?
+      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
                 OIJ.error("Not found [path][atcoder] in config")
       if directory.parent == atcoder
         AtCoderContest.new directory.basename
@@ -94,8 +94,8 @@ module OIJ
       }
     end
 
-    def to_directory(config : YAML::Any) : Path
-      atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
+    def to_directory : Path
+      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
                 OIJ.error("Not found [path][atcoder] in config")
       atcoder / contest
     end

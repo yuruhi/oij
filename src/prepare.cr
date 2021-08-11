@@ -2,37 +2,32 @@ require "./config"
 require "./service/service"
 
 module OIJ
-  def self.prepare(directory : Path, config : YAML::Any) : Nil
-    unless Dir.exists?(directory)
-      Dir.mkdir(directory)
-    end
-    Dir.cd(directory)
-    download(config)
-    generate_all_templates(config)
+  def self.prepare(directory : Path) : Nil
+    Problem.from_directory(directory).try(&.prepare)
   end
 
-  def self.prepare(url : String, config : YAML::Any) : Nil
-    directory = Problem.from_url?(url).try(&.to_directory(config)) ||
+  def self.prepare(url : String) : Nil
+    directory = Problem.from_url?(url).try(&.to_directory) ||
                 error("Invalid url: #{url}")
-    prepare(directory, config)
+    prepare(directory)
   end
 
-  def self.prepare_contest(directory : Path, config : YAML::Any) : Nil
-    problems = Contest.from_directory?(directory, config).try(&.problems) ||
+  def self.prepare_contest(directory : Path) : Nil
+    problems = Contest.from_directory?(directory).try(&.problems) ||
                error("Invalid directory: #{directory}")
     problems.each do |problem|
-      info("Prepare #{problem.to_url} to #{problem.to_directory(config)}")
-      prepare(problem.to_directory(config), config)
+      info("Prepare #{problem.to_url} to #{problem.to_directory}")
+      prepare(problem.to_directory)
       STDERR.puts
     end
   end
 
-  def self.prepare_contest(url : String, config : YAML::Any) : Nil
+  def self.prepare_contest(url : String) : Nil
     problems = Contest.from_url?(url).try(&.problems) ||
                error("Invalid url: #{url}")
     problems.each do |problem|
-      info("Prepare #{problem.to_url} to #{problem.to_directory(config)}")
-      prepare(problem.to_directory(config), config)
+      info("Prepare #{problem.to_url} to #{problem.to_directory}")
+      prepare(problem.to_directory)
       STDERR.puts
     end
   end

@@ -2,8 +2,8 @@ require "yaml"
 require "./utility"
 
 module OIJ
-  def self.normalize_input_file(file : String, config : YAML::Any) : Path
-    config["input_file_mapping"]?.try &.as_a.each do |(pattern, replacement)|
+  def self.normalize_input_file(file : String) : Path
+    OIJ::Config.get["input_file_mapping"]?.try &.as_a.each do |(pattern, replacement)|
       file = file.sub(Regex.new(pattern.as_s), replacement.as_s)
     end
     unless File.exists?(file)
@@ -12,16 +12,16 @@ module OIJ
     Path[file]
   end
 
-  def self.normalize_testcase_files(name : String, dir : Path, config : YAML::Any) : {Path, Path}
-    config["testcase_mapping"]?.try &.as_a.each do |(pattern, replacement)|
+  def self.normalize_testcase_files(name : String, dir : Path) : {Path, Path}
+    OIJ::Config.get["testcase_mapping"]?.try &.as_a.each do |(pattern, replacement)|
       name = name.sub(Regex.new(pattern.as_s), replacement.as_s)
     end
     {dir / "#{name}.in", dir / "#{name}.out"}
   end
 
-  def self.print_file(file : Path, config : YAML::Any) : Nil
+  def self.print_file(file : Path) : Nil
     error("Not found testcase file: #{file}") unless File.exists?(file)
-    if printer = config["printer"]?
+    if printer = OIJ::Config.get["printer"]?
       system "#{printer} #{file}"
     else
       info("#{file} (#{File.size(file)} byte):")
@@ -29,11 +29,11 @@ module OIJ
     end
   end
 
-  def self.print_file(files : Enumerable(Path), config : YAML::Any) : Nil
+  def self.print_file(files : Enumerable(Path)) : Nil
     files.each do |file|
       error("Not found testcase file: #{file}") unless File.exists?(file)
     end
-    if printer = config["printer"]?
+    if printer = OIJ::Config.get["printer"]?
       system "#{printer} #{files.join(' ')}"
     else
       files.each do |file|
@@ -43,8 +43,8 @@ module OIJ
     end
   end
 
-  def self.bundled_file(file : Path, config : YAML::Any) : File
-    bundler = config.dig?("bundler", file.extension[1..]) ||
+  def self.bundled_file(file : Path) : File
+    bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
               error("Not found bundler for #{file.extension}")
     File.tempfile("bundled", file.extension) do |tmp|
       command = "#{bundler} #{file}"

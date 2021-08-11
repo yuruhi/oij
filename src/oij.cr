@@ -18,7 +18,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.compile(Path[arguments.file], OIJ::Config.get)
+        OIJ.compile(Path[arguments.file])
       end
     end
 
@@ -28,7 +28,7 @@ module OIJ
       define_argument input_file
 
       def run
-        OIJ.execute(Path[arguments.file], arguments.input_file, OIJ::Config.get)
+        OIJ.execute(Path[arguments.file], arguments.input_file)
       end
     end
 
@@ -38,7 +38,7 @@ module OIJ
       define_argument input_file
 
       def run
-        OIJ.run(Path[arguments.file], arguments.input_file, OIJ::Config.get)
+        OIJ.run(Path[arguments.file], arguments.input_file)
       end
     end
 
@@ -47,7 +47,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.test(Path[arguments.file], OIJ::Config.get)
+        OIJ.test(Path[arguments.file])
       end
     end
 
@@ -56,7 +56,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.compile_and_test(Path[arguments.file], OIJ::Config.get)
+        OIJ.compile_and_test(Path[arguments.file])
       end
     end
 
@@ -68,7 +68,7 @@ module OIJ
         default: "test", long: dir, short: d
 
       def run
-        OIJ.edit_testcase(arguments.name, Path[flags.dir], OIJ::Config.get)
+        OIJ.edit_testcase(arguments.name, Path[flags.dir])
       end
     end
 
@@ -80,7 +80,7 @@ module OIJ
         default: "test", long: dir, short: d
 
       def run
-        OIJ.print_testcase(arguments.name, Path[flags.dir], OIJ::Config.get)
+        OIJ.print_testcase(arguments.name, Path[flags.dir])
       end
     end
 
@@ -98,11 +98,11 @@ module OIJ
 
       def run
         if flags.next
-          puts OIJ.get_next_url(Path[Dir.current], flags.strict, OIJ::Config.get)
+          puts OIJ.get_next_url(Path[Dir.current], flags.strict)
         elsif flags.prev
-          puts OIJ.get_prev_url(Path[Dir.current], flags.strict, OIJ::Config.get)
+          puts OIJ.get_prev_url(Path[Dir.current], flags.strict)
         else
-          puts OIJ.get_url(Path[Dir.current], OIJ::Config.get)
+          puts OIJ.get_url(Path[Dir.current])
         end
       end
     end
@@ -118,9 +118,9 @@ module OIJ
 
       def run
         if flags.next
-          puts OIJ.get_next_directory(Path[Dir.current], OIJ::Config.get)
+          puts OIJ.get_next_directory(Path[Dir.current])
         elsif flags.prev
-          puts OIJ.get_prev_directory(Path[Dir.current], OIJ::Config.get)
+          puts OIJ.get_prev_directory(Path[Dir.current])
         end
       end
     end
@@ -129,7 +129,7 @@ module OIJ
       define_help description: "download testcases"
 
       def run
-        OIJ.download(OIJ::Config.get)
+        OIJ.download
       end
     end
 
@@ -138,7 +138,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.bundle(Path[arguments.file], OIJ::Config.get)
+        OIJ.bundle(Path[arguments.file])
       end
     end
 
@@ -147,7 +147,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.bundle_and_submit(Path[arguments.file], Path[Dir.current], OIJ::Config.get)
+        OIJ.bundle_and_submit(Path[arguments.file], Path[Dir.current])
       end
     end
 
@@ -159,10 +159,10 @@ module OIJ
 
       def run
         if flags.ext.empty?
-          OIJ.generate_all_templates(OIJ::Config.get)
+          OIJ.generate_all_templates
         else
           flags.ext.each do |extension|
-            OIJ.generate_template(extension, OIJ::Config.get)
+            OIJ.generate_template(extension)
           end
         end
       end
@@ -174,9 +174,9 @@ module OIJ
 
       def run
         if url = arguments.url
-          OIJ.prepare(url, OIJ::Config.get)
+          Problem.from_url(url).prepare
         else
-          OIJ.prepare(Path[Dir.current], OIJ::Config.get)
+          Problem.from_directory(Path[Dir.current]).prepare
         end
       end
     end
@@ -187,9 +187,9 @@ module OIJ
 
       def run
         if url = arguments.url
-          OIJ.prepare_contest(url, OIJ::Config.get)
+          Contest.from_url(url).prepare
         else
-          OIJ.prepare_contest(Path[Dir.current], OIJ::Config.get)
+          Contest.from_directory(Path[Dir.current]).prepare
         end
       end
     end

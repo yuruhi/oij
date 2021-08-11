@@ -7,8 +7,8 @@ module OIJ
     def initialize(@number)
     end
 
-    def self.from_directory?(directory : Path, config : YAML::Any) : self?
-      yukicoder = config.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
+    def self.from_directory?(directory : Path) : self?
+      yukicoder = OIJ::Config.get.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
                   OIJ.error("Not found [path][yukicoder] in config")
       if directory.parent == yukicoder
         YukicoderProblem.new directory.basename.to_i
@@ -29,8 +29,8 @@ module OIJ
       YukicoderProblem.new number - 1
     end
 
-    def to_directory(config : YAML::Any) : Path
-      yukicoder = config.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
+    def to_directory : Path
+      yukicoder = OIJ::Config.get.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
                   OIJ.error("Not found [path][yukicoder] in config")
       yukicoder / number.to_s
     end
