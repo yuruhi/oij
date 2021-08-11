@@ -6,7 +6,7 @@ require "./testcase"
 require "./url"
 require "./template"
 require "./directory"
-require "./prepare"
+require "./service/service"
 
 module OIJ
   class CLI < Admiral::Command
@@ -98,11 +98,11 @@ module OIJ
 
       def run
         if flags.next
-          puts OIJ.get_next_url(Path[Dir.current], flags.strict)
+          puts Problem.current.succ(flags.strict).to_url
         elsif flags.prev
-          puts OIJ.get_prev_url(Path[Dir.current], flags.strict)
+          puts Problem.current.pred(flags.strict).to_url
         else
-          puts OIJ.get_url(Path[Dir.current])
+          puts Problem.current.to_url
         end
       end
     end
@@ -115,12 +115,15 @@ module OIJ
       define_flag prev : Bool,
         description: "get directory for previous problem",
         long: prev, short: p
+      define_flag strict : Bool,
+        description: "strict mode",
+        long: strict, short: s
 
       def run
         if flags.next
-          puts OIJ.get_next_directory(Path[Dir.current])
+          puts Problem.current.succ(flags.strict).to_directory
         elsif flags.prev
-          puts OIJ.get_prev_directory(Path[Dir.current])
+          puts Problem.current.pred(flags.strict).to_directory
         end
       end
     end
@@ -129,7 +132,7 @@ module OIJ
       define_help description: "download testcases"
 
       def run
-        OIJ.download
+        Problem.current.download
       end
     end
 
@@ -138,7 +141,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.bundle(Path[arguments.file])
+        Problem.current.bundle(Path[arguments.file])
       end
     end
 
@@ -147,7 +150,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.bundle_and_submit(Path[arguments.file], Path[Dir.current])
+        Problem.current.bundle_and_submit(Path[arguments.file])
       end
     end
 
@@ -176,7 +179,7 @@ module OIJ
         if url = arguments.url
           Problem.from_url(url).prepare
         else
-          Problem.from_directory(Path[Dir.current]).prepare
+          Problem.current.prepare
         end
       end
     end

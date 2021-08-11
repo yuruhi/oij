@@ -35,12 +35,33 @@ module OIJ
       from_url?(url) || OIJ.error("Invalid url: #{url}")
     end
 
-    def download(silent = false)
+    def self.current : self
+      from_directory(Path[Dir.current])
+    end
+
+    def download(silent = false) : Nil
       Dir.cd(to_directory)
       system silent ? "oj d #{to_url} > #{File::NULL}" : "oj d #{to_url}"
     end
 
-    def prepare(silent = false)
+    def submit(file : Path) : Nil
+      Dir.cd(to_directory)
+      system "oj s #{to_url} #{file}"
+    end
+
+    def bundle(file : Path) : Nil
+      Dir.cd(to_directory)
+      bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
+                OIJ.error("Not found bundler for #{file.extension}")
+      system "#{bundler} #{file}"
+    end
+
+    def bundle_and_submit(file : Path) : Nil
+      bundled = OIJ.bundled_file(file.expand(to_directory))
+      submit(Path[bundled.path])
+    end
+
+    def prepare(silent = false) : Nil
       unless Dir.exists?(to_directory)
         Dir.mkdir_p(to_directory)
       end

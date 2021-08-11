@@ -55,23 +55,4 @@ module OIJ
     compile?(file) || error("Compile error")
     system "oj test -c '#{execute_command(file, nil)}'"
   end
-
-  def self.download : Nil
-    system "oj d #{get_url(Path[Dir.current])} > #{File::NULL}"
-  end
-
-  def self.submit(file : Path, directory : Path) : Nil
-    system "cd #{directory} && oj s #{get_url(directory)} #{file}"
-  end
-
-  def self.bundle(file : Path) : Nil
-    bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
-              error("Not found bundler for #{file.extension}")
-    system "#{bundler} #{file}"
-  end
-
-  def self.bundle_and_submit(file : Path, directory : Path) : Nil
-    bundled = bundled_file(file)
-    submit(Path[bundled.path], directory)
-  end
 end
