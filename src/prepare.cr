@@ -26,4 +26,14 @@ module OIJ
       STDERR.puts
     end
   end
+
+  def self.prepare_contest(url : String, config : YAML::Any) : Nil
+    problems = Contest.from_url?(url).try(&.problems) ||
+               error("Invalid url: #{url}")
+    problems.each do |problem|
+      info("Prepare #{problem.to_url} to #{problem.to_directory(config)}")
+      prepare(problem.to_directory(config), config)
+      STDERR.puts
+    end
+  end
 end

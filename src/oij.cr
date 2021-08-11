@@ -170,7 +170,7 @@ module OIJ
 
     class Prepare < Admiral::Command
       define_help description: "prepare problem"
-      define_argument url
+      define_argument url, description: "specifiy problem url"
 
       def run
         if url = arguments.url
@@ -183,9 +183,14 @@ module OIJ
 
     class PrepareContest < Admiral::Command
       define_help description: "prepare contest"
+      define_argument url, description: "specify contest url"
 
       def run
-        OIJ.prepare_contest(Path[Dir.current], OIJ::Config.get)
+        if url = arguments.url
+          OIJ.prepare_contest(url, OIJ::Config.get)
+        else
+          OIJ.prepare_contest(Path[Dir.current], OIJ::Config.get)
+        end
       end
     end
 
