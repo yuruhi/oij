@@ -3,8 +3,8 @@ require "./utility"
 
 module OIJ
   def self.normalize_input_file(file : String) : Path
-    OIJ::Config.get["input_file_mapping"]?.try &.as_a.each do |(pattern, replacement)|
-      file = file.sub(Regex.new(pattern.as_s), replacement.as_s)
+    OIJ::Config.input_file_mapping.each do |pattern, replacement|
+      file = file.sub(Regex.new(pattern), replacement)
     end
     unless File.exists?(file)
       error("Not found input file: #{file}")
@@ -13,15 +13,15 @@ module OIJ
   end
 
   def self.normalize_testcase_files(name : String, dir : Path) : {Path, Path}
-    OIJ::Config.get["testcase_mapping"]?.try &.as_a.each do |(pattern, replacement)|
-      name = name.sub(Regex.new(pattern.as_s), replacement.as_s)
+    OIJ::Config.testcase_mapping.each do |pattern, replacement|
+      name = name.sub(Regex.new(pattern), replacement)
     end
     {dir / "#{name}.in", dir / "#{name}.out"}
   end
 
   def self.print_file(file : Path) : Nil
     error("Not found testcase file: #{file}") unless File.exists?(file)
-    if printer = OIJ::Config.get["printer"]?
+    if printer = OIJ::Config.printer?
       system "#{printer} #{file}"
     else
       info("#{file} (#{File.size(file)} byte):")
@@ -33,7 +33,7 @@ module OIJ
     files.each do |file|
       error("Not found testcase file: #{file}") unless File.exists?(file)
     end
-    if printer = OIJ::Config.get["printer"]?
+    if printer = OIJ::Config.printer?
       system "#{printer} #{files.join(' ')}"
     else
       files.each do |file|
@@ -44,8 +44,9 @@ module OIJ
   end
 
   def self.bundled_file(file : Path) : File
-    bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
-              error("Not found bundler for #{file.extension}")
+    bundler = OIJ::Config.bundler(file.extension[1..]) {
+      error("Not found bundler for #{file.extension}")
+    }
     File.tempfile("bundled", file.extension) do |tmp|
       command = "#{bundler} #{file}"
       info("$ #{command}")

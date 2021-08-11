@@ -8,9 +8,7 @@ module OIJ
     end
 
     def self.from_directory?(directory : Path) : self?
-      yukicoder = OIJ::Config.get.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
-                  OIJ.error("Not found [path][yukicoder] in config")
-      if directory.parent == yukicoder
+      if directory.parent == OIJ::Config.path("yukicoder")
         YukicoderProblem.new directory.basename.to_i
       end
     end
@@ -30,9 +28,7 @@ module OIJ
     end
 
     def to_directory : Path
-      yukicoder = OIJ::Config.get.dig?("path", "yukicoder").try { |s| Path[s.as_s] } ||
-                  OIJ.error("Not found [path][yukicoder] in config")
-      yukicoder / number.to_s
+      Path[OIJ::Config.path("yukicoder")] / number.to_s
     end
 
     def to_url : String

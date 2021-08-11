@@ -8,9 +8,7 @@ module OIJ
     end
 
     def self.from_directory?(directory : Path) : self?
-      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
-                OIJ.error("Not found [path][atcoder] in config")
-      if directory.parent.parent == atcoder
+      if directory.parent.parent == OIJ::Config.path("atcoder")
         AtCoderProblem.new directory.parent.basename, directory.basename
       end
     end
@@ -73,9 +71,7 @@ module OIJ
     end
 
     def to_directory : Path
-      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
-                OIJ.error("Not found [path][atcoder] in config")
-      atcoder / contest / problem
+      Path[OIJ::Config.path("atcoder")] / contest / problem
     end
 
     def to_url : String
@@ -87,9 +83,7 @@ module OIJ
     getter contest : String
 
     def self.from_directory?(directory : Path) : self?
-      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
-                OIJ.error("Not found [path][atcoder] in config")
-      if directory.parent == atcoder
+      if directory.parent == OIJ::Config.path("atcoder")
         AtCoderContest.new directory.basename
       end
     end
@@ -111,9 +105,7 @@ module OIJ
     end
 
     def to_directory : Path
-      atcoder = OIJ::Config.get.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
-                OIJ.error("Not found [path][atcoder] in config")
-      atcoder / contest
+      Path[OIJ::Config.path("atcoder")] / contest
     end
 
     def to_url : String

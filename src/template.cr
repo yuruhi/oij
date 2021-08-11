@@ -1,27 +1,25 @@
 module OIJ
   def self.generate_template(ext : String) : Nil
-    if template_name = OIJ::Config.get.dig?("template", ext)
-      template, name = template_name.as_a
-      template, name = Path[template.as_s], Path[name.as_s]
-      if File.exists?(template)
-        if !File.exists?(name)
-          File.copy(template, name)
-          info("Generate template file in #{name.expand}")
-        else
-          warning("Failed to generate template file since file is already exists: #{name}")
-        end
+    template, name = OIJ::Config.template(ext) {
+      warning("Not found template file for .#{ext}"); return
+    }
+    if File.exists?(template)
+      if !File.exists?(name)
+        File.copy(template, name)
+        info("Generate template file in #{name.expand}")
       else
-        error("Not found template file: #{template}")
+        warning("Failed to generate template file since file is already exists: #{name}")
       end
     else
-      warning("Not found template file for .#{ext}")
+      error("Not found template file: #{template}")
     end
   end
 
   def self.generate_all_templates : Nil
-    template = OIJ::Config.get["template"]? || error("Not found template in config")
-    template.as_h.each_key do |ext|
-      generate_template(ext.as_s)
+    OIJ::Config.template do
+      error("Not found template in config")
+    end.each_key do |ext|
+      generate_template(ext)
     end
   end
 end

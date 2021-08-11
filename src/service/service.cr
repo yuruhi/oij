@@ -52,9 +52,7 @@ module OIJ
 
     def bundle(file : Path) : Nil
       Dir.cd(to_directory)
-      bundler = OIJ::Config.get.dig?("bundler", file.extension[1..]) ||
-                OIJ.error("Not found bundler for #{file.extension}")
-      OIJ.system "#{bundler} #{file}"
+      OIJ.system "#{OIJ::Config.bundler(file.extension[1..])} #{file}"
     end
 
     def bundle_and_submit(file : Path) : Nil

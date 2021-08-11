@@ -8,9 +8,7 @@ module OIJ
     end
 
     def self.from_directory?(directory : Path) : self?
-      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
-                   OIJ.error("Not found [path][codeforces] in config")
-      if directory.parent.parent == codeforces
+      if directory.parent.parent == OIJ::Config.path("codeforces")
         CodeforcesProblem.new directory.parent.basename, directory.basename
       end
     end
@@ -67,9 +65,7 @@ module OIJ
     end
 
     def to_directory : Path
-      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
-                   OIJ.error("Not found [path][codeforces] in config")
-      codeforces / contest / problem
+      Path[OIJ::Config.path("codeforces")] / contest / problem
     end
 
     def to_url : String
@@ -81,9 +77,7 @@ module OIJ
     getter contest : String
 
     def self.from_directory?(directory : Path) : self?
-      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
-                   OIJ.error("Not found [path][codeforces] in config")
-      if directory.parent == codeforces
+      if directory.parent == OIJ::Config.path("codeforces")
         CodeforcesContest.new directory.basename
       end
     end
@@ -105,9 +99,7 @@ module OIJ
     end
 
     def to_directory : Path
-      codeforces = OIJ::Config.get.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
-                   OIJ.error("Not found [path][codeforces] in config")
-      codeforces / contest
+      Path[OIJ::Config.path("codeforces")] / contest
     end
 
     def to_url : String

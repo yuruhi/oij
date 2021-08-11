@@ -4,23 +4,21 @@ require "./utility"
 module OIJ
   def self.execute_command(file : Path, input_file : Path?) : String
     extension = file.extension[1..]
-    if command = OIJ::Config.get.dig?("execute", extension)
-      command = command.as_s.gsub("${file}", file)
-      if input_file
-        error("Not found input file: #{input_file}") unless File.exists?(input_file)
-        "#{command} < #{input_file}"
-      else
-        command
-      end
-    else
+    command = OIJ::Config.execute(extension) {
       error("Not found execute command: .#{extension}")
+    }.gsub("${file}", file)
+    if input_file
+      error("Not found input file: #{input_file}") unless File.exists?(input_file)
+      "#{command} < #{input_file}"
+    else
+      command
     end
   end
 
   def self.compile_command?(file : Path) : String?
     extension = file.extension[1..]
-    if command = OIJ::Config.get.dig?("compile", extension)
-      command.as_s.gsub("${file}", file)
+    if command = OIJ::Config.compile?(extension)
+      command.gsub("${file}", file)
     end
   end
 
