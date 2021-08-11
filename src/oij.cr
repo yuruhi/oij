@@ -182,6 +182,9 @@ module OIJ
       define_flag yukicoder : Int32,
         description: "specify yukicoder problem",
         long: yukicoder, short: y
+      define_flag codeforces,
+        description: "specify codeforces problem",
+        long: codeforces, short: c
 
       def run
         problem =
@@ -189,6 +192,8 @@ module OIJ
             AtCoderProblem.from_argument(atcoder)
           elsif yukicoder = flags.yukicoder
             YukicoderProblem.new(yukicoder)
+          elsif codeforces = flags.codeforces
+            CodeforcesProblem.from_argument(codeforces)
           elsif url = arguments.url
             Problem.from_url(url)
           else

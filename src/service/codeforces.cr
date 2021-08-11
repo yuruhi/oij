@@ -21,6 +21,17 @@ module OIJ
       end
     end
 
+    def self.from_argument?(str : String) : self?
+      if str.count('/') == 1
+        left, _, right = str.partition('/')
+        CodeforcesProblem.new left, right
+      end
+    end
+
+    def self.from_argument(str : String) : self
+      from_argument?(str) || OIJ.error("Invalid arguemnt: #{str}")
+    end
+
     def succ(strict = false)
       if strict
         url = to_url
