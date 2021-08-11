@@ -100,8 +100,16 @@ module OIJ
       from_url?(url) || OIJ.error("Invalid url: #{url}")
     end
 
+    def self.current : self
+      from_directory(Path[Dir.current])
+    end
+
     def prepare(silent = true)
-      problems.each(&.prepare)
+      problems.each do |problem|
+        OIJ.info("Prepare #{problem.to_url} in #{problem.to_directory}")
+        problem.prepare(silent)
+        STDERR.puts
+      end
     end
   end
 end
