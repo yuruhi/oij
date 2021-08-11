@@ -57,7 +57,7 @@ module OIJ
   end
 
   def self.download(config : YAML::Any) : Nil
-    system "oj d #{get_url(Path[Dir.current], config)} > #{File.NULL}"
+    system "oj d #{get_url(Path[Dir.current], config)} > #{File::NULL}"
   end
 
   def self.submit(file : Path, directory : Path, config : YAML::Any) : Nil
