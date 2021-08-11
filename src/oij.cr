@@ -171,14 +171,27 @@ module OIJ
 
     class Prepare < Admiral::Command
       define_help description: "prepare problem"
-      define_argument url, description: "specifiy problem url"
+      define_argument url, description: "specify problem url"
+      define_flag atcoder,
+        description: "specify atcoder problem",
+        long: atcoder, short: a
+      define_flag yukicoder : Int32,
+        description: "specify yukicoder problem",
+        long: yukicoder, short: y
 
       def run
-        if url = arguments.url
-          Problem.from_url(url).prepare
-        else
-          Problem.current.prepare
-        end
+        problem =
+          if atcoder = flags.atcoder
+            atcoder =~ %r[(.+)/(.+)]
+            AtCoderProblem.new $1, $2
+          elsif yukicoder = flags.yukicoder
+            YukicoderProblem.new(yukicoder)
+          elsif url = arguments.url
+            Problem.from_url(url)
+          else
+            Problem.current
+          end
+        problem.prepare(true)
       end
     end
 
