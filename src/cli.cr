@@ -1,3 +1,3 @@
 require "./oij"
 
-OIJ.run
+OIJ::CLI.run

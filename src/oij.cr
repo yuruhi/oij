@@ -1,182 +1,207 @@
-require "yaml"
-require "option_parser"
+require "admiral"
+require "./config"
 require "./command"
 require "./file"
 require "./testcase"
 require "./url"
 require "./template"
 require "./directory"
+require "./prepare"
 
 module OIJ
-  VERSION = "0.1.0"
+  class CLI < Admiral::Command
+    define_help description: "oij is a competitive programming helper"
+    define_version "0.1.0"
 
-  def self.run(args = ARGV)
-    config = YAML.parse File.new("/home/yuruhiya/programming/oij/config/oij.yml")
+    class Compile < Admiral::Command
+      define_help description: "compile given file"
+      define_argument file, required: true
 
-    parser = OptionParser.new
-    parser.banner = "oij is a competitive programming helper."
-
-    parser.on("-v", "--version", "show the oij version number") do
-      puts "oij #{VERSION}"
-      exit
-    end
-    parser.on("-h", "--help", "show this help message") do
-      puts parser
-      exit
-    end
-
-    parser.on("compile", "compile") do
-      parser.banner = "Usage: oij compile file"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        compile(file, config)
+      def run
+        OIJ.compile(Path[arguments.file], OIJ::Config.get)
       end
     end
 
-    parser.on("execute", "execute") do
-      parser.banner = "Usage: oij execute file [input_file]"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        input_file = files[1]?
-        execute(file, input_file, config)
+    class Execute < Admiral::Command
+      define_help description: "execute given file"
+      define_argument file, required: true
+      define_argument input_file
+
+      def run
+        OIJ.execute(Path[arguments.file], arguments.input_file, OIJ::Config.get)
       end
     end
 
-    parser.on("run", "compile and execute") do
-      parser.banner = "Usage: oij run file [input_file]"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        input_file = files[1]?
-        run(file, input_file, config)
+    class CompileAndExecute < Admiral::Command
+      define_help description: "compile and execute given file"
+      define_argument file, required: true
+      define_argument input_file
+
+      def run
+        OIJ.run(Path[arguments.file], arguments.input_file, OIJ::Config.get)
       end
     end
 
-    parser.on("test", "test") do
-      parser.banner = "Usage: oij test file"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        test(file, config)
+    class Test < Admiral::Command
+      define_help description: "test given file"
+      define_argument file, required: true
+
+      def run
+        OIJ.test(Path[arguments.file], OIJ::Config.get)
       end
     end
 
-    parser.on("t", "compile and test") do
-      parser.banner = "Usage: oij t file"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        compile_and_test(file, config)
+    class CompileAndTest < Admiral::Command
+      define_help description: "compile and test given file"
+      define_argument file, required: true
+
+      def run
+        OIJ.compile_and_test(Path[arguments.file], OIJ::Config.get)
       end
     end
 
-    parser.on("et", "edit testcase") do
-      parser.banner = "Usage: oij et name"
+    class EditTestcase < Admiral::Command
+      define_help description: "edit given testcase"
+      define_argument name, required: true
+      define_flag dir : String,
+        description: "a directory name for testcases (default: test)",
+        default: "test", long: dir, short: d
 
-      dir = Path["test"]
-      parser.on("-d DIR", "--dir DIR", "a directory name for testcases (default: test)") do |argument|
-        dir = Path[argument]
-      end
-
-      parser.unknown_args do |names|
-        names.each do |name|
-          edit_testcase(name, dir, config)
-        end
+      def run
+        OIJ.edit_testcase(arguments.name, Path[flags.dir], OIJ::Config.get)
       end
     end
 
-    parser.on("pt", "print testcase") do
-      parser.banner = "Usage: oij pt name"
+    class PrintTestcase < Admiral::Command
+      define_help description: "print given testcase"
+      define_argument name, required: true
+      define_flag dir : String,
+        description: "a directory name for testcases (default: test)",
+        default: "test", long: dir, short: d
 
-      dir = Path["test"]
-      parser.on("-d DIR", "--dir DIR", "a directory name for testcases (default: test)") do |argument|
-        dir = Path[argument]
-      end
-
-      parser.unknown_args do |names|
-        names.each do |name|
-          print_testcase(name, dir, config)
-        end
+      def run
+        OIJ.print_testcase(arguments.name, Path[flags.dir], OIJ::Config.get)
       end
     end
 
-    parser.on("url", "get url for current directory") do
-      parser.banner = "Usage: oij url"
-      puts get_url(Path[Dir.current], config)
-    end
+    class GetURL < Admiral::Command
+      define_help description: "get url"
+      define_flag next : Bool,
+        description: "get next url for current directory",
+        long: next, short: n
+      define_flag prev : Bool,
+        description: "get previous url for current directory",
+        long: prev, short: p
 
-    parser.on("url+", "get next url for current directory") do
-      parser.banner = "Usage: oij url+"
-      puts get_next_url(Path[Dir.current], config)
-    end
-
-    parser.on("url-", "get previous url for current directory") do
-      parser.banner = "Usage: oij url-"
-      puts get_prev_url(Path[Dir.current], config)
-    end
-
-    parser.on("dir+", "get directory for next problem") do
-      parser.banner = "Usage: oij dir+"
-      puts get_next_directory(Path[Dir.current], config)
-    end
-
-    parser.on("dir-", "get directory for next problem") do
-      parser.banner = "Usage: oij dir-"
-      puts get_prev_directory(Path[Dir.current], config)
-    end
-
-    parser.on("d", "download testcases") do
-      parser.banner = "Usage: oij d"
-      download(config)
-    end
-
-    parser.on("s", "submit code") do
-      parser.banner = "Usage: oij s file"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        bundle_and_submit(file, Path[Dir.current], config)
-      end
-    end
-
-    parser.on("template", "generate templates") do
-      parser.banner = "Usage: oij template [extension]"
-      parser.unknown_args do |extensions|
-        if extensions.empty?
-          generate_all_templates(config)
+      def run
+        if flags.next
+          puts OIJ.get_next_url(Path[Dir.current], false, OIJ::Config.get)
+        elsif flags.prev
+          puts OIJ.get_prev_url(Path[Dir.current], OIJ::Config.get)
         else
-          extensions.each { |extension| generate_template(extension, config) }
+          puts OIJ.get_url(Path[Dir.current], OIJ::Config.get)
         end
       end
     end
 
-    parser.on("p", "download testcases and generate templates") do
-      parser.banner = "Usage: oij p [url]"
-      parser.unknown_args do |args|
-        if args.empty?
-          prepare(Path[Dir.current], config)
+    class GetDirectory < Admiral::Command
+      define_help description: "get directory for next or previous problem"
+      define_flag next : Bool,
+        description: "get directory for next problem",
+        long: next, short: n
+      define_flag prev : Bool,
+        description: "get directory for previous problem",
+        long: prev, short: p
+
+      def run
+        if flags.next
+          puts OIJ.get_next_directory(Path[Dir.current], OIJ::Config.get)
+        elsif flags.prev
+          puts OIJ.get_prev_directory(Path[Dir.current], OIJ::Config.get)
+        end
+      end
+    end
+
+    class Download < Admiral::Command
+      define_help description: "download testcases"
+
+      def run
+        OIJ.download(OIJ::Config.get)
+      end
+    end
+
+    class Bundle < Admiral::Command
+      define_help description: "bundle given file"
+      define_argument file, required: true
+
+      def run
+        OIJ.bundle(Path[arguments.file], OIJ::Config.get)
+      end
+    end
+
+    class Submit < Admiral::Command
+      define_help description: "sumit given code"
+      define_argument file, required: true
+
+      def run
+        OIJ.bundle_and_submit(Path[arguments.file], Path[Dir.current], OIJ::Config.get)
+      end
+    end
+
+    class Template < Admiral::Command
+      define_help description: "generate templates"
+      define_flag ext : Array(String),
+        description: "specify generated extensions (if not given, generate all templates)",
+        long: ext, short: e
+
+      def run
+        if flags.ext.empty?
+          OIJ.generate_all_templates(OIJ::Config.get)
         else
-          prepare(args[0], config)
+          flags.ext.each do |extension|
+            OIJ.generate_template(extension, OIJ::Config.get)
+          end
         end
       end
     end
 
-    parser.on("p+", "downolad testcase and generate templates for next problem") do
-      parser.banner = "Usage: oij p+"
-      next_dir = get_next_directory(Path[Dir.current], config)
-      prepare(next_dir, config)
-    end
+    class Prepare < Admiral::Command
+      define_help description: "generate"
+      define_argument url
 
-    parser.on("p-", "downolad testcase and generate templates for prev problem") do
-      parser.banner = "Usage: oij p-"
-      prev_dir = get_prev_directory(Path[Dir.current], config)
-      prepare(prev_dir, config)
-    end
-
-    parser.on("bundle", "bundle") do
-      parser.banner = "Usage: oij bundle file"
-      parser.unknown_args do |files|
-        file = Path[files[0]]
-        bundle(file, config)
+      def run
+        if url = arguments.url
+          OIJ.prepare(url, OIJ::Config.get)
+        else
+          OIJ.prepare(Path[Dir.current], OIJ::Config.get)
+        end
       end
     end
 
-    parser.parse(args)
+    class PrepareContest < Admiral::Command
+      define_help description: "prepare contest"
+
+      def run
+      end
+    end
+
+    register_sub_command compile, Compile
+    register_sub_command execute, Execute
+    register_sub_command run, CompileAndExecute
+    register_sub_command test, Test
+    register_sub_command t, CompileAndTest
+    register_sub_command "edit-test", EditTestcase, short: "et"
+    register_sub_command "print-test", PrintTestcase, short: "pt"
+    register_sub_command url, GetURL
+    register_sub_command dir, GetDirectory
+    register_sub_command download, Download, short: "d"
+    register_sub_command bundle, Bundle
+    register_sub_command submit, Submit, short: "s"
+    register_sub_command template, Template
+    register_sub_command prepare, Prepare, short: "p"
+
+    def run
+      puts help
+    end
   end
 end
