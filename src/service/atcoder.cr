@@ -105,9 +105,9 @@ module OIJ
 
     def problems
       contest_json = OIJ.oj_api("get-contest", to_url)
-      contest_json["problems"].as_a.map { |problem_json|
-        AtCoderProblem.from_url?(problem_json["url"].as_s).not_nil!
-      }
+      contest_json["problems"].as_a.map do |problem_json|
+        AtCoderProblem.from_url(problem_json["url"].as_s)
+      end
     end
 
     def to_directory : Path
