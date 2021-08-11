@@ -3,9 +3,7 @@ require "./config"
 require "./command"
 require "./file"
 require "./testcase"
-require "./url"
 require "./template"
-require "./directory"
 require "./service/service"
 
 module OIJ

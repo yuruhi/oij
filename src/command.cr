@@ -1,7 +1,5 @@
 require "yaml"
 require "./utility"
-require "./url"
-require "./template"
 
 module OIJ
   def self.execute_command(file : Path, input_file : Path?) : String
