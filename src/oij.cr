@@ -92,12 +92,15 @@ module OIJ
       define_flag prev : Bool,
         description: "get previous url for current directory",
         long: prev, short: p
+      define_flag strict : Bool,
+        description: "strict mode",
+        long: strict, short: s
 
       def run
         if flags.next
-          puts OIJ.get_next_url(Path[Dir.current], false, OIJ::Config.get)
+          puts OIJ.get_next_url(Path[Dir.current], flags.strict, OIJ::Config.get)
         elsif flags.prev
-          puts OIJ.get_prev_url(Path[Dir.current], OIJ::Config.get)
+          puts OIJ.get_prev_url(Path[Dir.current], flags.strict, OIJ::Config.get)
         else
           puts OIJ.get_url(Path[Dir.current], OIJ::Config.get)
         end
