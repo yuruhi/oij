@@ -66,4 +66,42 @@ module OIJ
       "https://atcoder.jp/contests/#{contest}/tasks/#{problem}"
     end
   end
+
+  struct AtCoderContest < Contest
+    getter contest : String
+
+    def self.from_directory?(directory : Path, config : YAML::Any) : self?
+      atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
+                OIJ.error("Not found [path][atcoder] in config")
+      if directory.parent == atcoder
+        AtCoderContest.new directory.basename
+      end
+    end
+
+    def self.from_url?(url : String) : self?
+      if url =~ %r[^https://atcoder.jp/contests/(.+)$]
+        AtCoderContest.new $1
+      end
+    end
+
+    def initialize(@contest)
+    end
+
+    def problems
+      contest_json = OIJ.oj_api("get-contest", to_url)
+      contest_json["problems"].as_a.map { |problem_json|
+        AtCoderProblem.from_url?(problem_json["url"].as_s).not_nil!
+      }
+    end
+
+    def to_directory(config : YAML::Any) : Path
+      atcoder = config.dig?("path", "atcoder").try { |s| Path[s.as_s] } ||
+                OIJ.error("Not found [path][atcoder] in config")
+      atcoder / contest
+    end
+
+    def to_url : String
+      "https://atcoder.jp/contests/#{contest}"
+    end
+  end
 end
