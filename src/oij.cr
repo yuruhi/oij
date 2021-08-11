@@ -204,7 +204,7 @@ module OIJ
     register_sub_command template, Template
     register_sub_command prepare, Prepare, short: "p"
     register_sub_command "prepare-contest", PrepareContest, short: "pc"
-    
+
     def run
       puts help
     end

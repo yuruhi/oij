@@ -21,9 +21,9 @@ module OIJ
     problems = Contest.from_directory?(directory, config).try(&.problems) ||
                error("Invalid directory: #{directory}")
     problems.each do |problem|
-			info("Prepare #{problem.to_url} to #{problem.to_directory(config)}")
+      info("Prepare #{problem.to_url} to #{problem.to_directory(config)}")
       prepare(problem.to_directory(config), config)
-			STDERR.puts
+      STDERR.puts
     end
   end
 end

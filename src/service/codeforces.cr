@@ -71,7 +71,7 @@ module OIJ
 
     def self.from_directory?(directory : Path, config : YAML::Any) : self?
       codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
-                OIJ.error("Not found [path][codeforces] in config")
+                   OIJ.error("Not found [path][codeforces] in config")
       if directory.parent == codeforces
         CodeforcesContest.new directory.basename
       end
@@ -95,7 +95,7 @@ module OIJ
 
     def to_directory(config : YAML::Any) : Path
       codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
-                OIJ.error("Not found [path][codeforces] in config")
+                   OIJ.error("Not found [path][codeforces] in config")
       codeforces / contest
     end
 
