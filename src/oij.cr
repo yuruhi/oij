@@ -182,7 +182,7 @@ module OIJ
       def run
         problem =
           if atcoder = flags.atcoder
-            AtCoderProblem.from_argument atcoder
+            AtCoderProblem.from_argument(atcoder)
           elsif yukicoder = flags.yukicoder
             YukicoderProblem.new(yukicoder)
           elsif url = arguments.url
@@ -199,11 +199,13 @@ module OIJ
       define_argument url, description: "specify contest url"
 
       def run
-        if url = arguments.url
-          Contest.from_url(url).prepare
-        else
-          Contest.from_directory(Path[Dir.current]).prepare
-        end
+        contest =
+          if url = arguments.url
+            Contest.from_url(url)
+          else
+            Contest.current
+          end
+        contest.prepare
       end
     end
 
