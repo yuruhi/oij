@@ -65,4 +65,42 @@ module OIJ
       "https://codeforces.com/contest/#{contest}/problem/#{problem}"
     end
   end
+
+  struct CodeforcesContest < Contest
+    getter contest : String
+
+    def self.from_directory?(directory : Path, config : YAML::Any) : self?
+      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+                OIJ.error("Not found [path][codeforces] in config")
+      if directory.parent == codeforces
+        CodeforcesContest.new directory.basename
+      end
+    end
+
+    def self.from_url?(url : String) : self?
+      if url =~ %r[^https://codeforces.com/contest/(.+)$]
+        CodeforcesContest.new $1
+      end
+    end
+
+    def initialize(@contest)
+    end
+
+    def problems
+      contest_json = OIJ.oj_api("get-contest", to_url)
+      contest_json["problems"].as_a.map { |problem_json|
+        CodeforcesProblem.from_url?(problem_json["url"].as_s).not_nil!
+      }
+    end
+
+    def to_directory(config : YAML::Any) : Path
+      codeforces = config.dig?("path", "codeforces").try { |s| Path[s.as_s] } ||
+                OIJ.error("Not found [path][codeforces] in config")
+      codeforces / contest
+    end
+
+    def to_url : String
+      "https://codeforces.com/contest/#{contest}"
+    end
+  end
 end
