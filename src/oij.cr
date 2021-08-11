@@ -182,8 +182,7 @@ module OIJ
       def run
         problem =
           if atcoder = flags.atcoder
-            atcoder =~ %r[(.+)/(.+)]
-            AtCoderProblem.new $1, $2
+            AtCoderProblem.from_argument atcoder
           elsif yukicoder = flags.yukicoder
             YukicoderProblem.new(yukicoder)
           elsif url = arguments.url

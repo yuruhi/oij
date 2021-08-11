@@ -21,6 +21,22 @@ module OIJ
       end
     end
 
+    def self.from_argument?(str : String) : self?
+      case str.count('/')
+      when 0
+        if str.count('_') == 1
+          AtCoderProblem.new str[0...str.index('_')], str
+        end
+      when 1
+        left, _, right = str.partition('/')
+        AtCoderProblem.new left, right
+      end
+    end
+
+    def self.from_argument(str : String) : self
+      from_argument?(str) || OIJ.error("Invalid arguemnt: #{str}")
+    end
+
     def succ(strict = false)
       if strict
         url = to_url
