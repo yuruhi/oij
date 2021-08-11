@@ -125,6 +125,8 @@ module OIJ
             Problem.current.succ(flags.strict)
           elsif flags.prev
             Problem.current.pred(flags.strict)
+          else
+            OIJ.error("Missing flag --next or --prev")
           end
         puts problem.to_directory
       end
@@ -200,21 +202,32 @@ module OIJ
             Problem.current
           end
         problem.prepare(true)
+        puts problem.to_directory
       end
     end
 
     class PrepareContest < Admiral::Command
       define_help description: "prepare contest"
       define_argument url, description: "specify contest url"
+      define_flag atcoder,
+        description: "specify atcoder contest",
+        long: atocder, short: a
+      define_flag codeforces,
+        description: "specify codeforces contest",
+        long: codeforces, short: c
 
       def run
         contest =
           if url = arguments.url
             Contest.from_url(url)
+          elsif atcoder = flags.atcoder
+            AtCoderContest.new(atcoder)
+          elsif codeforces = flags.codeforces
+            CodeforcesContest.new(codeforces)
           else
             Contest.current
           end
-        contest.prepare
+        contest.prepare(true)
       end
     end
 
