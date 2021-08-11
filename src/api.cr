@@ -3,7 +3,7 @@ require "./utility"
 
 module OIJ
   def self.oj_api(command : String, url : String) : JSON::Any
-    json = JSON.parse `oj-api #{command} #{url} 2> /dev/null`
+    json = JSON.parse `oj-api #{command} #{url} 2> #{File.NULL}`
     case status = json["status"].as_s
     when "ok"
       json["result"]
