@@ -95,13 +95,15 @@ module OIJ
         long: strict, short: s
 
       def run
-        if flags.next
-          puts Problem.current.succ(flags.strict).to_url
-        elsif flags.prev
-          puts Problem.current.pred(flags.strict).to_url
-        else
-          puts Problem.current.to_url
-        end
+        problem =
+          if flags.next
+            Problem.current.succ(flags.strict)
+          elsif flags.prev
+            Problem.current.pred(flags.strict)
+          else
+            Problem.current
+          end
+        puts problem.to_url
       end
     end
 
@@ -118,11 +120,13 @@ module OIJ
         long: strict, short: s
 
       def run
-        if flags.next
-          puts Problem.current.succ(flags.strict).to_directory
-        elsif flags.prev
-          puts Problem.current.pred(flags.strict).to_directory
-        end
+        problem =
+          if flags.next
+            Problem.current.succ(flags.strict)
+          elsif flags.prev
+            Problem.current.pred(flags.strict)
+          end
+        puts problem.to_directory
       end
     end
 
