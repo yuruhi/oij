@@ -169,7 +169,7 @@ module OIJ
     end
 
     class Prepare < Admiral::Command
-      define_help description: "generate"
+      define_help description: "prepare problem"
       define_argument url
 
       def run
@@ -185,6 +185,7 @@ module OIJ
       define_help description: "prepare contest"
 
       def run
+        OIJ.prepare_contest(Path[Dir.current], OIJ::Config.get)
       end
     end
 
@@ -202,7 +203,8 @@ module OIJ
     register_sub_command submit, Submit, short: "s"
     register_sub_command template, Template
     register_sub_command prepare, Prepare, short: "p"
-
+    register_sub_command "prepare-contest", PrepareContest, short: "pc"
+    
     def run
       puts help
     end

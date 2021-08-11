@@ -57,7 +57,7 @@ module OIJ
   end
 
   def self.download(config : YAML::Any) : Nil
-    system "oj d #{get_url(Path[Dir.current], config)}"
+    system "oj d #{get_url(Path[Dir.current], config)} > #{File.NULL}"
   end
 
   def self.submit(file : Path, directory : Path, config : YAML::Any) : Nil
@@ -73,19 +73,5 @@ module OIJ
   def self.bundle_and_submit(file : Path, directory : Path, config : YAML::Any) : Nil
     bundled = bundled_file(file, config)
     submit(Path[bundled.path], directory, config)
-  end
-
-  def self.prepare(directory : Path, config : YAML::Any) : Nil
-    Dir.cd(directory)
-    download(config)
-    generate_all_templates(config)
-  end
-
-  def self.prepare(url : String, config : YAML::Any) : Nil
-    directory = Problem.from_url?(url).try(&.to_directory(config)) ||
-                error("Invalid url: #{url}")
-    Dir.cd(directory)
-    download(config)
-    generate_all_templates(config)
   end
 end
