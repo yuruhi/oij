@@ -90,21 +90,17 @@ module OIJ
         long: strict, short: s
 
       def run
-        problem = get_problem
-        puts problem.to_url
+        puts get_problem.to_url
       end
     end
 
     class GetDirectory < Admiral::Command
       define_help description: "print directory of given problem", short: h
-      define_flag strict : Bool,
-        description: "strict mode",
-        long: strict, short: s
+      define_flag strict : Bool, description: "strict mode", short: s
       OIJ.add_problem_flags
 
       def run
-        problem = get_problem
-        puts problem.to_directory
+        puts get_problem.to_directory
       end
     end
 
