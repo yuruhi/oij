@@ -7,8 +7,8 @@ require "./cli_helper"
 
 module OIJ
   class CLI < Admiral::Command
-    define_help description: "oij is a competitive programming helper"
-    define_version "0.1.0"
+    define_help description: "oij is a competitive programming helper", short: h
+    define_version "0.1.0", short: v
 
     class Compile < Admiral::Command
       define_help description: "compile given file", short: h
