@@ -1,3 +1,5 @@
+require "./config"
+
 module OIJ
   def self.generate_template(ext : String) : Nil
     template, name = OIJ::Config.template(ext) {

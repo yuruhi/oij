@@ -1,6 +1,7 @@
 require "yaml"
 require "json"
 require "../utility"
+require "../config"
 require "../api"
 require "../command"
 

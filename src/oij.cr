@@ -1,7 +1,5 @@
 require "admiral"
-require "./config"
 require "./command"
-require "./file"
 require "./testcase"
 require "./template"
 require "./service/service"

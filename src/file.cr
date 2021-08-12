@@ -1,5 +1,6 @@
 require "yaml"
 require "./utility"
+require "./config"
 
 module OIJ
   def self.normalize_input_file(file : String) : Path
