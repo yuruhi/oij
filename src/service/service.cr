@@ -40,18 +40,30 @@ module OIJ
     end
 
     def download(silent = false) : Nil
-      Dir.cd(to_directory)
+      dir = to_directory
+      unless Dir.exists?(dir)
+        Dir.mkdir(dir)
+      end
+      Dir.cd(dir)
       success = OIJ.system silent ? "oj d #{to_url} > #{File::NULL}" : "oj d #{to_url}"
       OIJ.warning("Failed to download: #{to_url}") unless success
     end
 
     def submit(file : Path) : Nil
-      Dir.cd(to_directory)
+      dir = to_directory
+      unless Dir.exists?(dir)
+        OIJ.error("No such directory: #{dir}")
+      end
+      Dir.cd(dir)
       OIJ.system "oj s #{to_url} #{file}"
     end
 
     def bundle(file : Path) : Nil
-      Dir.cd(to_directory)
+      dir = to_directory
+      unless Dir.exists?(dir)
+        OIJ.error("No such directory: #{dir}")
+      end
+      Dir.cd(dir)
       OIJ.system "#{OIJ::Config.bundler(file.extension[1..])} #{file}"
     end
 
@@ -61,9 +73,6 @@ module OIJ
     end
 
     def prepare(silent = false) : Nil
-      unless Dir.exists?(to_directory)
-        Dir.mkdir_p(to_directory)
-      end
       download(silent)
       OIJ.generate_all_templates
     end
