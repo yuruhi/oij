@@ -44,6 +44,7 @@ module OIJ
       dir = to_directory
       unless Dir.exists?(dir)
         Dir.mkdir(dir)
+        OIJ.info("Make directory: #{dir}")
       end
       Dir.cd(dir)
       success = OIJ.system silent ? "oj d #{to_url} > #{File::NULL}" : "oj d #{to_url}"
