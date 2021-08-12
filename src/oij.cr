@@ -11,6 +11,43 @@ module OIJ
     define_help description: "oij is a competitive programming helper"
     define_version "0.1.0"
 
+    macro add_problem_flags
+      define_argument url, description: "specify problem url"
+      define_flag atcoder,
+        description: "specify atcoder problem",
+        long: atcoder, short: a
+      define_flag yukicoder : Int32,
+        description: "specify yukicoder problem",
+        long: yukicoder, short: y
+      define_flag codeforces,
+        description: "specify codeforces problem",
+        long: codeforces, short: c
+      define_flag next : Bool,
+        description: "specify next problem",
+        long: next, short: n
+      define_flag prev : Bool,
+        description: "specify previous problem",
+        long: prev, short: p
+
+      def get_problem : Problem
+        if url = arguments.url
+          Problem.from_url(url)
+        elsif atcoder = flags.atcoder
+          AtCoderProblem.from_argument(atcoder)
+        elsif yukicoder = flags.yukicoder
+          YukicoderProblem.new(yukicoder)
+        elsif codeforces = flags.codeforces
+          CodeforcesProblem.from_argument(codeforces)
+        elsif flags.next
+          Problem.current.succ
+        elsif flags.prev
+          Problem.current.pred
+        else
+          Problem.current
+        end
+      end
+    end
+
     class Compile < Admiral::Command
       define_help description: "compile given file"
       define_argument file, required: true
@@ -83,60 +120,38 @@ module OIJ
     end
 
     class GetURL < Admiral::Command
-      define_help description: "get url"
-      define_flag next : Bool,
-        description: "get next url for current directory",
-        long: next, short: n
-      define_flag prev : Bool,
-        description: "get previous url for current directory",
-        long: prev, short: p
+      define_help description: "print url of given problem"
+      CLI.add_problem_flags
       define_flag strict : Bool,
         description: "strict mode",
         long: strict, short: s
 
       def run
-        problem =
-          if flags.next
-            Problem.current.succ(flags.strict)
-          elsif flags.prev
-            Problem.current.pred(flags.strict)
-          else
-            Problem.current
-          end
+        problem = get_problem
         puts problem.to_url
       end
     end
 
     class GetDirectory < Admiral::Command
-      define_help description: "get directory for next or previous problem"
-      define_flag next : Bool,
-        description: "get directory for next problem",
-        long: next, short: n
-      define_flag prev : Bool,
-        description: "get directory for previous problem",
-        long: prev, short: p
+      define_help description: "print directory of given problem"
       define_flag strict : Bool,
         description: "strict mode",
         long: strict, short: s
+      CLI.add_problem_flags
 
       def run
-        problem =
-          if flags.next
-            Problem.current.succ(flags.strict)
-          elsif flags.prev
-            Problem.current.pred(flags.strict)
-          else
-            OIJ.error("Missing flag --next or --prev")
-          end
+        problem = get_problem
         puts problem.to_directory
       end
     end
 
     class Download < Admiral::Command
       define_help description: "download testcases"
+      CLI.add_problem_flags
 
       def run
-        Problem.current.download
+        problem = get_problem
+        problem.download
       end
     end
 
@@ -150,7 +165,7 @@ module OIJ
     end
 
     class Submit < Admiral::Command
-      define_help description: "sumit given code"
+      define_help description: "submit given code"
       define_argument file, required: true
 
       def run
@@ -176,32 +191,12 @@ module OIJ
     end
 
     class Prepare < Admiral::Command
-      define_help description: "prepare problem"
-      define_argument url, description: "specify problem url"
-      define_flag atcoder,
-        description: "specify atcoder problem",
-        long: atcoder, short: a
-      define_flag yukicoder : Int32,
-        description: "specify yukicoder problem",
-        long: yukicoder, short: y
-      define_flag codeforces,
-        description: "specify codeforces problem",
-        long: codeforces, short: c
+      define_help description: "prepare given problem"
+      CLI.add_problem_flags
 
       def run
-        problem =
-          if atcoder = flags.atcoder
-            AtCoderProblem.from_argument(atcoder)
-          elsif yukicoder = flags.yukicoder
-            YukicoderProblem.new(yukicoder)
-          elsif codeforces = flags.codeforces
-            CodeforcesProblem.from_argument(codeforces)
-          elsif url = arguments.url
-            Problem.from_url(url)
-          else
-            Problem.current
-          end
-        problem.prepare(true)
+        problem = get_problem
+        problem.prepare(silent: true)
         puts problem.to_directory
       end
     end
@@ -232,7 +227,7 @@ module OIJ
     end
 
     register_sub_command compile, Compile
-    register_sub_command execute, Execute
+    register_sub_command exe, Execute
     register_sub_command run, CompileAndExecute
     register_sub_command test, Test
     register_sub_command t, CompileAndTest
