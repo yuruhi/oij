@@ -3,48 +3,12 @@ require "./command"
 require "./testcase"
 require "./template"
 require "./service/service"
+require "./cli_helper"
 
 module OIJ
   class CLI < Admiral::Command
     define_help description: "oij is a competitive programming helper"
     define_version "0.1.0"
-
-    macro add_problem_flags
-      define_argument url, description: "specify problem url"
-      define_flag atcoder,
-        description: "specify atcoder problem",
-        long: atcoder, short: a
-      define_flag yukicoder : Int32,
-        description: "specify yukicoder problem",
-        long: yukicoder, short: y
-      define_flag codeforces,
-        description: "specify codeforces problem",
-        long: codeforces, short: c
-      define_flag next : Bool,
-        description: "specify next problem",
-        long: next, short: n
-      define_flag prev : Bool,
-        description: "specify previous problem",
-        long: prev, short: p
-
-      def get_problem : Problem
-        if url = arguments.url
-          Problem.from_url(url)
-        elsif atcoder = flags.atcoder
-          AtCoderProblem.from_argument(atcoder)
-        elsif yukicoder = flags.yukicoder
-          YukicoderProblem.new(yukicoder)
-        elsif codeforces = flags.codeforces
-          CodeforcesProblem.from_argument(codeforces)
-        elsif flags.next
-          Problem.current.succ
-        elsif flags.prev
-          Problem.current.pred
-        else
-          Problem.current
-        end
-      end
-    end
 
     class Compile < Admiral::Command
       define_help description: "compile given file"
@@ -96,8 +60,9 @@ module OIJ
     class EditTestcase < Admiral::Command
       define_help description: "edit given testcase"
       define_argument name, required: true
+
       define_flag dir : String,
-        description: "a directory name for testcases (default: test)",
+        description: "a directory name for testcases",
         default: "test", long: dir, short: d
 
       def run
@@ -119,7 +84,7 @@ module OIJ
 
     class GetURL < Admiral::Command
       define_help description: "print url of given problem"
-      CLI.add_problem_flags
+      OIJ.add_problem_flags
       define_flag strict : Bool,
         description: "strict mode",
         long: strict, short: s
@@ -135,7 +100,7 @@ module OIJ
       define_flag strict : Bool,
         description: "strict mode",
         long: strict, short: s
-      CLI.add_problem_flags
+      OIJ.add_problem_flags
 
       def run
         problem = get_problem
@@ -144,12 +109,12 @@ module OIJ
     end
 
     class Download < Admiral::Command
-      define_help description: "download testcases"
-      CLI.add_problem_flags
+      define_help description: "download testcases", short: h
+      define_flag silent : Bool, description: "silent mode", short: s
+      OIJ.add_problem_flags
 
       def run
-        problem = get_problem
-        problem.download
+        get_problem.download(silent: flags.silent, args: OIJ.after_two_hyphens)
       end
     end
 
@@ -190,7 +155,7 @@ module OIJ
 
     class Prepare < Admiral::Command
       define_help description: "prepare given problem"
-      CLI.add_problem_flags
+      OIJ.add_problem_flags
 
       def run
         problem = get_problem

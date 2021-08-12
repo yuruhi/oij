@@ -40,15 +40,30 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(silent = false) : Nil
+    def download(*, silent = false, args = nil) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
         Dir.mkdir(dir)
         OIJ.info("Make directory: #{dir}")
       end
       Dir.cd(dir)
-      success = OIJ.system silent ? "oj d #{to_url} > #{File::NULL}" : "oj d #{to_url}"
-      OIJ.warning("Failed to download: #{to_url}") unless success
+
+      cmd = if silent
+              if args
+                %[oj d #{to_url} "${@}" > #{File::NULL}]
+              else
+                "oj d #{to_url} > #{File::NULL}"
+              end
+            else
+              if args
+                %[oj d #{to_url} "${@}"]
+              else
+                "oj d #{to_url}"
+              end
+            end
+      unless OIJ.system(cmd, args)
+        OIJ.warning("Failed to download: #{to_url}")
+      end
     end
 
     def submit(file : Path) : Nil
@@ -75,7 +90,7 @@ module OIJ
     end
 
     def prepare(silent = false) : Nil
-      download(silent)
+      download(silent: silent)
       OIJ.generate_all_templates
     end
   end

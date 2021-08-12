@@ -24,8 +24,18 @@ module OIJ
     put_message("INFO", :blue, message)
   end
 
-  def self.system(command : String)
-    info("$ #{command}")
-    ::system(command)
+  def self.system(command : String, args = nil)
+    cmd = if args
+            args_str = args.join(' ')
+            if command.includes?(' ')
+              command.gsub(%["${@}"], args_str)
+            else
+              command + args_str
+            end
+          else
+            command
+          end
+    OIJ.info("$ #{cmd}")
+    ::system(command, args)
   end
 end
