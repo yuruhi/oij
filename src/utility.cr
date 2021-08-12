@@ -10,6 +10,12 @@ module OIJ
     exit(1)
   end
 
+  def self.error(message, &block)
+    put_message("ERROR", :red, message)
+    yield
+    exit(1)
+  end
+
   def self.warning(message)
     put_message("WARING", :yellow, message)
   end
