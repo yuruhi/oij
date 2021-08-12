@@ -11,7 +11,7 @@ module OIJ
     define_version "0.1.0"
 
     class Compile < Admiral::Command
-      define_help description: "compile given file"
+      define_help description: "compile given file", short: h
       define_argument file, required: true
 
       def run
@@ -20,7 +20,7 @@ module OIJ
     end
 
     class Execute < Admiral::Command
-      define_help description: "execute given file"
+      define_help description: "execute given file", short: h
       define_argument file, required: true
       define_argument input_file
 
@@ -30,7 +30,7 @@ module OIJ
     end
 
     class CompileAndExecute < Admiral::Command
-      define_help description: "compile and execute given file"
+      define_help description: "compile and execute given file", short: h
       define_argument file, required: true
       define_argument input_file
 
@@ -40,7 +40,7 @@ module OIJ
     end
 
     class Test < Admiral::Command
-      define_help description: "test given file"
+      define_help description: "test given file", short: h
       define_argument file, required: true
 
       def run
@@ -49,7 +49,7 @@ module OIJ
     end
 
     class CompileAndTest < Admiral::Command
-      define_help description: "compile and test given file"
+      define_help description: "compile and test given file", short: h
       define_argument file, required: true
 
       def run
@@ -58,7 +58,7 @@ module OIJ
     end
 
     class EditTestcase < Admiral::Command
-      define_help description: "edit given testcase"
+      define_help description: "edit given testcase", short: h
       define_argument name, required: true
 
       define_flag dir : String,
@@ -71,7 +71,7 @@ module OIJ
     end
 
     class PrintTestcase < Admiral::Command
-      define_help description: "print given testcase"
+      define_help description: "print given testcase", short: h
       define_argument name, required: true
       define_flag dir : String,
         description: "a directory name for testcases (default: test)",
@@ -83,7 +83,7 @@ module OIJ
     end
 
     class GetURL < Admiral::Command
-      define_help description: "print url of given problem"
+      define_help description: "print url of given problem", short: h
       OIJ.add_problem_flags
       define_flag strict : Bool,
         description: "strict mode",
@@ -96,7 +96,7 @@ module OIJ
     end
 
     class GetDirectory < Admiral::Command
-      define_help description: "print directory of given problem"
+      define_help description: "print directory of given problem", short: h
       define_flag strict : Bool,
         description: "strict mode",
         long: strict, short: s
@@ -119,7 +119,7 @@ module OIJ
     end
 
     class Bundle < Admiral::Command
-      define_help description: "bundle given file"
+      define_help description: "bundle given file", short: h
       define_argument file, required: true
 
       def run
@@ -128,7 +128,7 @@ module OIJ
     end
 
     class Submit < Admiral::Command
-      define_help description: "submit given code"
+      define_help description: "submit given code", short: h
       define_argument file, required: true
 
       def run
@@ -137,7 +137,7 @@ module OIJ
     end
 
     class Template < Admiral::Command
-      define_help description: "generate templates"
+      define_help description: "generate templates", short: h
       define_flag ext : Array(String),
         description: "specify generated extensions (if not given, generate all templates)",
         long: ext, short: e
@@ -154,7 +154,7 @@ module OIJ
     end
 
     class Prepare < Admiral::Command
-      define_help description: "prepare given problem"
+      define_help description: "prepare given problem", short: h
       OIJ.add_problem_flags
 
       def run
@@ -165,7 +165,7 @@ module OIJ
     end
 
     class PrepareContest < Admiral::Command
-      define_help description: "prepare contest"
+      define_help description: "prepare contest", short: h
       define_argument url, description: "specify contest url"
       define_flag atcoder,
         description: "specify atcoder contest",
