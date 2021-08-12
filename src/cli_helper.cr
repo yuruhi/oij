@@ -1,21 +1,16 @@
 module OIJ
   macro add_problem_flags
     define_argument url, description: "specify problem url"
-    define_flag atcoder,
-      description: "specify atcoder problem",
-      long: atcoder, short: a
-    define_flag yukicoder : Int32,
-      description: "specify yukicoder problem",
-      long: yukicoder, short: y
-    define_flag codeforces,
-      description: "specify codeforces problem",
-      long: codeforces, short: c
-    define_flag next : Bool,
-      description: "specify next problem",
-      long: next, short: n
-    define_flag prev : Bool,
-      description: "specify previous problem",
-      long: prev, short: p
+    define_flag atcoder, short: a,
+      description: "specify atcoder problem"
+    define_flag yukicoder : Int32, short: y,
+      description: "specify yukicoder problem"
+    define_flag codeforces, short: c,
+      description: "specify codeforces problem"
+    define_flag next : Bool, short: n,
+      description: "specify next problem"
+    define_flag prev : Bool, short: p,
+      description: "specify previous problem"
 
     def get_problem : Problem
       if url = arguments.url
