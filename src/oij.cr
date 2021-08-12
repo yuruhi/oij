@@ -155,7 +155,7 @@ module OIJ
 
       def run
         problem = get_problem
-        problem.prepare(silent: true)
+        problem.prepare(silent: true, args: OIJ.after_two_hyphens)
         puts problem.to_directory
       end
     end
@@ -181,7 +181,7 @@ module OIJ
           else
             Contest.current
           end
-        contest.prepare(true)
+        contest.prepare(silent: true, args: OIJ.after_two_hyphens)
       end
     end
 

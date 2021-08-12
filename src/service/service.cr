@@ -40,10 +40,10 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(*, silent = false, args = nil) : Nil
+    def download(*, silent, args) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
-        Dir.mkdir(dir)
+        Dir.mkdir_p(dir)
         OIJ.info("Make directory: #{dir}")
       end
       Dir.cd(dir)
@@ -89,8 +89,8 @@ module OIJ
       submit(Path[bundled.path])
     end
 
-    def prepare(silent = false) : Nil
-      download(silent: silent)
+    def prepare(*, silent, args) : Nil
+      download(silent: silent, args: args)
       OIJ.generate_all_templates
     end
   end
@@ -128,10 +128,10 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def prepare(silent = true)
+    def prepare(*, silent, args)
       problems.each do |problem|
         OIJ.info("Prepare #{problem.to_url} in #{problem.to_directory}")
-        problem.prepare(silent)
+        problem.prepare(silent: silent, args: args)
         STDERR.puts
       end
     end
