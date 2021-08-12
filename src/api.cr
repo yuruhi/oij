@@ -8,7 +8,7 @@ module OIJ
     when "ok"
       json["result"]
     when "error"
-      error("$ oj-api #{command} #{url}") do
+      OIJ.error("$ oj-api #{command} #{url}") do
         json["messages"].as_a.each { |s| STDERR << "  " << s << '\n' }
       end
     else

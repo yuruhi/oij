@@ -12,7 +12,7 @@ module OIJ
     input, output = normalize_testcase_files(name, dir)
     File.touch(input)
     File.touch(output)
-    info("Make testcase files: #{input} #{output}")
+    OIJ.info("Make testcase files: #{input} #{output}")
     system "#{editor} #{input} #{output}"
   end
 

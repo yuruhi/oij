@@ -5,10 +5,10 @@ module OIJ
   def self.execute_command(file : Path, input_file : Path?) : String
     extension = file.extension[1..]
     command = OIJ::Config.execute(extension) {
-      error("Not found execute command: .#{extension}")
+      OIJ.error("Not found execute command: .#{extension}")
     }.gsub("${file}", file)
     if input_file
-      error("Not found input file: #{input_file}") unless File.exists?(input_file)
+      OIJ.error("Not found input file: #{input_file}") unless File.exists?(input_file)
       "#{command} < #{input_file}"
     else
       command
@@ -29,7 +29,7 @@ module OIJ
 
   def self.compile(file : Path) : Bool
     command = compile_command?(file) ||
-              error("Not found compile command: #{file.extension}")
+              OIJ.error("Not found compile command: #{file.extension}")
     system command
   end
 
@@ -39,7 +39,7 @@ module OIJ
   end
 
   def self.run(file : Path, input_file : String?)
-    compile?(file) || error("Compile error")
+    compile?(file) || OIJ.error("Compile error")
     execute(file, input_file)
   end
 
@@ -48,7 +48,7 @@ module OIJ
   end
 
   def self.compile_and_test(file : Path)
-    compile?(file) || error("Compile error")
+    compile?(file) || OIJ.error("Compile error")
     system "oj test -c '#{execute_command(file, nil)}'"
   end
 end
