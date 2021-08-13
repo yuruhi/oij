@@ -136,7 +136,7 @@ module OIJ
 
     class DownloadProblem < Admiral::Command
       define_help short: h, description: "Download testcases of given problem."
-      define_flag silent : Bool, short: s, description: "silent mode"
+      define_flag silent : Bool, short: s, description: "Silent mode."
       OIJ.define_problem_flags
 
       def run
@@ -146,7 +146,7 @@ module OIJ
 
     class DownloadContest < Admiral::Command
       define_help short: h, description: "Download testcases of given contest."
-      define_flag silent : Bool, short: s, description: "silent mode"
+      define_flag silent : Bool, short: s, description: "Silent mode."
       OIJ.define_contest_flags
 
       def run
@@ -154,10 +154,10 @@ module OIJ
       end
     end
 
-    class Template < Admiral::Command
+    class GenerateTemplate < Admiral::Command
       define_help short: h, description: "Generate templates."
       define_flag ext : Array(String), short: e,
-        description: "specify generated extensions (if not given, generate all templates)"
+        description: "Specify generated extensions (if not given, generate all templates)."
 
       def run
         if flags.ext.empty?
@@ -210,7 +210,7 @@ module OIJ
 
     register_sub_command "download", DownloadProblem, short: "d"
     register_sub_command "download-contest", DownloadContest, short: "dc"
-    register_sub_command "template", Template
+    register_sub_command "template", GenerateTemplate
     register_sub_command "prepare", PrepareProblem, short: "p"
     register_sub_command "prepare-contest", PrepareContest, short: "pc"
 
