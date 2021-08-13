@@ -4,7 +4,7 @@ require "./config"
 
 module OIJ
   def self.normalize_input_file(file : String) : Path
-    OIJ::Config.input_file_mapping.each do |pattern, replacement|
+    OIJ::Config.input_file_mapping?.try &.each do |pattern, replacement|
       file = file.sub(Regex.new(pattern), replacement)
     end
     unless File.exists?(file)
@@ -14,7 +14,7 @@ module OIJ
   end
 
   def self.normalize_testcase_files(name : String, dir : Path) : {Path, Path}
-    OIJ::Config.testcase_mapping.each do |pattern, replacement|
+    OIJ::Config.testcase_mapping?.try &.each do |pattern, replacement|
       name = name.sub(Regex.new(pattern), replacement)
     end
     {dir / "#{name}.in", dir / "#{name}.out"}
