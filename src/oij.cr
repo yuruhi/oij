@@ -80,9 +80,8 @@ module OIJ
       end
     end
 
-    class GetURL < Admiral::Command
+    class GetProblemURL < Admiral::Command
       define_help short: h, description: "print url of given problem"
-      define_flag strict : Bool, short: s, description: "strict mode"
       OIJ.add_problem_flags
 
       def run
@@ -90,9 +89,17 @@ module OIJ
       end
     end
 
+    class GetContestURL < Admiral::Command
+      define_help short: h, description: "print url of given contest"
+      OIJ.add_contest_flags
+
+      def run
+        puts get_contest.to_url
+      end
+    end
+
     class GetDirectory < Admiral::Command
       define_help short: h, description: "print directory of given problem"
-      define_flag strict : Bool, short: s, description: "strict mode"
       OIJ.add_problem_flags
 
       def run
@@ -157,24 +164,10 @@ module OIJ
 
     class PrepareContest < Admiral::Command
       define_help short: h, description: "prepare contest"
-      define_argument url, description: "specify contest url"
-      define_flag atcoder, short: a,
-        description: "specify atcoder contest"
-      define_flag codeforces, short: c,
-        description: "specify codeforces contest"
+      OIJ.add_contest_flags
 
       def run
-        contest =
-          if url = arguments.url
-            Contest.from_url(url)
-          elsif atcoder = flags.atcoder
-            AtCoderContest.new(atcoder)
-          elsif codeforces = flags.codeforces
-            CodeforcesContest.new(codeforces)
-          else
-            Contest.current
-          end
-        contest.prepare(silent: true, args: OIJ.after_two_hyphens)
+        get_contest.prepare(silent: true, args: OIJ.after_two_hyphens)
       end
     end
 
@@ -185,7 +178,8 @@ module OIJ
     register_sub_command t, CompileAndTest
     register_sub_command "edit-test", EditTestcase, short: "et"
     register_sub_command "print-test", PrintTestcase, short: "pt"
-    register_sub_command url, GetURL
+    register_sub_command url, GetProblemURL
+    register_sub_command "url-contest", GetContestURL, short: "urlc"
     register_sub_command dir, GetDirectory
     register_sub_command download, Download, short: "d"
     register_sub_command bundle, Bundle

@@ -11,6 +11,8 @@ module OIJ
       description: "specify next problem"
     define_flag prev : Bool, short: p,
       description: "specify previous problem"
+    define_flag strict : Bool, short: s,
+      description: "strict mode"
 
     def get_problem : Problem
       if url = arguments.url
@@ -22,11 +24,41 @@ module OIJ
       elsif codeforces = flags.codeforces
         CodeforcesProblem.from_argument(codeforces)
       elsif flags.next
-        Problem.current.succ
+        Problem.current.succ(flags.strict)
       elsif flags.prev
-        Problem.current.pred
+        Problem.current.pred(flags.strict)
       else
         Problem.current
+      end
+    end
+  end
+
+  macro add_contest_flags
+    define_argument url, description: "specify contest url"
+    define_flag atcoder, short: a,
+      description: "specify atcoder contest"
+    define_flag codeforces, short: c,
+      description: "specify codeforces contest"
+    define_flag next : Bool, short: n,
+      description: "specify next contest"
+    define_flag prev : Bool, short: p,
+      description: "specify previous contest"
+    define_flag strict : Bool, short: s,
+      description: "strict mode"
+
+    def get_contest : Contest
+      if url = arguments.url
+        Contest.from_url(url)
+      elsif atcoder = flags.atcoder
+        AtCoderContest.new(atcoder)
+      elsif codeforces = flags.codeforces
+        CodeforcesContest.new(codeforces)
+      elsif flags.next
+        Contest.current.succ(flags.strict)
+      elsif flags.prev
+        Contest.current.pred(flags.strict)
+      else
+        Contest.current
       end
     end
   end
