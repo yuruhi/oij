@@ -62,7 +62,7 @@ module OIJ
       define_argument name, required: true
 
       define_flag dir : String, default: "test", short: d,
-        description: "a directory name for testcases"
+        description: "Specify directory name for testcases."
 
       def run
         OIJ.edit_testcase(arguments.name, Path[flags.dir])
@@ -73,7 +73,7 @@ module OIJ
       define_help short: h, description: "Print given testcase."
       define_argument name, required: true
       define_flag dir : String, default: "test", short: d,
-        description: "a directory name for testcases (default: test)"
+        description: "Specify directory name for testcases."
 
       def run
         OIJ.print_testcase(arguments.name, Path[flags.dir])
