@@ -134,13 +134,23 @@ module OIJ
       end
     end
 
-    class Download < Admiral::Command
+    class DownloadProblem < Admiral::Command
       define_help short: h, description: "download testcases"
       define_flag silent : Bool, short: s, description: "silent mode"
       OIJ.define_problem_flags
 
       def run
         get_problem.download(silent: flags.silent, args: OIJ.after_two_hyphens)
+      end
+    end
+
+    class DownloadContest < Admiral::Command
+      define_help short: h, description: "download testcases"
+      define_flag silent : Bool, short: s, description: "silent mode"
+      OIJ.define_contest_flags
+
+      def run
+        get_contest.download(silent: flags.silent, args: OIJ.after_two_hyphens)
       end
     end
 
@@ -198,7 +208,8 @@ module OIJ
     register_sub_command "bundle", Bundle
     register_sub_command "submit", Submit, short: "s"
 
-    register_sub_command "download", Download, short: "d"
+    register_sub_command "download", DownloadProblem, short: "d"
+    register_sub_command "download-contest", DownloadContest, short: "dc"
     register_sub_command "template", Template
     register_sub_command "prepare", PrepareProblem, short: "p"
     register_sub_command "prepare-contest", PrepareContest, short: "pc"
