@@ -1,18 +1,18 @@
 module OIJ
   macro define_problem_flags
-    define_argument url, description: "specify problem url"
+    define_argument url, description: "Specify problem url."
     define_flag atcoder, short: a,
-      description: "specify atcoder problem"
+      description: "Specify atcoder problem."
     define_flag yukicoder : Int32, short: y,
-      description: "specify yukicoder problem"
+      description: "Specify yukicoder problem."
     define_flag codeforces, short: c,
-      description: "specify codeforces problem"
+      description: "Specify codeforces problem."
     define_flag next : Bool, short: n,
-      description: "specify next problem"
+      description: "Specify next problem."
     define_flag prev : Bool, short: p,
-      description: "specify previous problem"
+      description: "Specify previous problem."
     define_flag strict : Bool, short: s,
-      description: "strict mode"
+      description: "Strict mode."
 
     def get_problem : Problem
       if url = arguments.url
@@ -34,17 +34,17 @@ module OIJ
   end
 
   macro define_contest_flags
-    define_argument url, description: "specify contest url"
+    define_argument url, description: "Specify contest url."
     define_flag atcoder, short: a,
-      description: "specify atcoder contest"
+      description: "Specify atcoder contest."
     define_flag codeforces, short: c,
-      description: "specify codeforces contest"
+      description: "Specify codeforces contest."
     define_flag next : Bool, short: n,
-      description: "specify next contest"
+      description: "Specify next contest."
     define_flag prev : Bool, short: p,
-      description: "specify previous contest"
+      description: "Specify previous contest."
     define_flag strict : Bool, short: s,
-      description: "strict mode"
+      description: "Strict mode."
 
     def get_contest : Contest
       if url = arguments.url
@@ -70,30 +70,4 @@ module OIJ
       [] of String
     end
   end
-
-  macro delegate_flags(flags)
-		{% for arg in flags %}
-		  {% if arg.size == 1 %}
-			  define_flag {{arg[0]}}
-			{% else %}
-			  define_flag {{arg[0]}}, {{arg[1].double_splat}}
-			{% end %}
-		{% end %}
-
-		def delegated_args
-			args = [] of String
-			{% for arg in flags %}
-				{% if arg[0].is_a?(TypeDeclaration) && arg[0].type.stringify == "Bool" %}
-					if flags.{{arg[0].var}}
-						args << "--{{arg[0].var.stringify.tr("_", "-").id}}"
-					end
-				{% else %}
-					if val = flags.{{arg[0]}}
-						args << "--{{arg[0].stringify.tr("_", "-").id}}" << val
-					end
-				{% end %}
-			{% end %}
-			args
-		end
-	end
 end
