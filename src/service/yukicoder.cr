@@ -32,7 +32,7 @@ module OIJ
     end
 
     def to_url : String
-      "https://yukicoder.me/problems/#{number}"
+      "https://yukicoder.me/problems/no/#{number}"
     end
   end
 end
