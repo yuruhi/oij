@@ -53,7 +53,7 @@ Subcommands:
 ```yaml
 compile:
     cr: "crystal build ${file} -o a.out --error-trace"
-    cpp: "g++-9 -Wall -g -fsanitize=undefined,address -std=c++17 -Wfatal-errors ${file}"
+    cpp: "g++ ${file}"
     c: "gcc ${file}"
     rb: "ruby -wc ${file}"
     p6: "rakudo -c ${file}"
