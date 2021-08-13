@@ -15,4 +15,16 @@ module OIJ
       raise "Unexpected states: #{status}"
     end
   end
+
+  def self.oj_api_success?(command : String, url : String) : Bool
+    json = JSON.parse `oj-api #{command} #{url} 2> #{File::NULL}`
+    case status = json["status"].as_s
+    when "ok"
+      true
+    when "error"
+      false
+    else
+      raise "Unexpected states: #{status}"
+    end
+  end
 end
