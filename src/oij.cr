@@ -116,16 +116,6 @@ module OIJ
       end
     end
 
-    class Download < Admiral::Command
-      define_help short: h, description: "download testcases"
-      define_flag silent : Bool, short: s, description: "silent mode"
-      OIJ.define_problem_flags
-
-      def run
-        get_problem.download(silent: flags.silent, args: OIJ.after_two_hyphens)
-      end
-    end
-
     class Bundle < Admiral::Command
       define_help short: h, description: "bundle given file"
       define_argument file, required: true
@@ -141,6 +131,16 @@ module OIJ
 
       def run
         Problem.current.bundle_and_submit(Path[arguments.file])
+      end
+    end
+
+    class Download < Admiral::Command
+      define_help short: h, description: "download testcases"
+      define_flag silent : Bool, short: s, description: "silent mode"
+      OIJ.define_problem_flags
+
+      def run
+        get_problem.download(silent: flags.silent, args: OIJ.after_two_hyphens)
       end
     end
 
@@ -185,15 +185,20 @@ module OIJ
     register_sub_command "run", CompileAndExecute
     register_sub_command "test", Test
     register_sub_command "t", CompileAndTest
+
     register_sub_command "edit-test", EditTestcase, short: "et"
     register_sub_command "print-test", PrintTestcase, short: "pt"
+
     register_sub_command "url", ProblemURL
     register_sub_command "url-contest", ContestURL, short: "urlc"
+
     register_sub_command "dir", PorblemDirectory
     register_sub_command "dir-contest", ContestDirectory, short: "dirc"
-    register_sub_command "download", Download, short: "d"
+
     register_sub_command "bundle", Bundle
     register_sub_command "submit", Submit, short: "s"
+
+    register_sub_command "download", Download, short: "d"
     register_sub_command "template", Template
     register_sub_command "prepare", PrepareProblem, short: "p"
     register_sub_command "prepare-contest", PrepareContest, short: "pc"
