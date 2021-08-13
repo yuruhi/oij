@@ -49,17 +49,9 @@ module OIJ
       Dir.cd(dir)
 
       cmd = if silent
-              if args
-                %[oj d #{to_url} "${@}" > #{File::NULL}]
-              else
-                "oj d #{to_url} > #{File::NULL}"
-              end
+              "oj d #{to_url} #{args ? %["${@}" ] : ""}> #{File::NULL}"
             else
-              if args
-                %[oj d #{to_url} "${@}"]
-              else
-                "oj d #{to_url}"
-              end
+              "oj d #{to_url} #{args ? %["${@}"] : ""}"
             end
       unless OIJ.system(cmd, args)
         OIJ.warning("Failed to download: #{to_url}")
@@ -98,7 +90,6 @@ module OIJ
   abstract struct Contest
     abstract def succ(strict = false)
     abstract def pred(strict = false)
-    abstract def problems
     abstract def to_directory : Path
     abstract def to_url : String
 
@@ -130,8 +121,16 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
+    def download(*, silent, args)
+      each do |problem|
+        OIJ.info("Download #{problem.to_url} in #{problem.to_directory}")
+        problem.download(silent: silent, args: args)
+        STDERR.puts
+      end
+    end
+
     def prepare(*, silent, args)
-      problems.each do |problem|
+      each do |problem|
         OIJ.info("Prepare #{problem.to_url} in #{problem.to_directory}")
         problem.prepare(silent: silent, args: args)
         STDERR.puts

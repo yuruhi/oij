@@ -91,10 +91,10 @@ module OIJ
     def initialize(@contest)
     end
 
-    def problems
+    def each(&block) : Nil
       contest_json = OIJ.oj_api("get-contest", to_url)
-      contest_json["problems"].as_a.map do |problem_json|
-        CodeforcesProblem.from_url?(problem_json["url"].as_s).not_nil!
+      contest_json["problems"].as_a.each do |problem_json|
+        yield CodeforcesProblem.from_url?(problem_json["url"].as_s).not_nil!
       end
     end
 
