@@ -80,7 +80,7 @@ module OIJ
       end
     end
 
-    class GetProblemURL < Admiral::Command
+    class ProblemURL < Admiral::Command
       define_help short: h, description: "print url of given problem"
       OIJ.add_problem_flags
 
@@ -89,7 +89,7 @@ module OIJ
       end
     end
 
-    class GetContestURL < Admiral::Command
+    class ContestURL < Admiral::Command
       define_help short: h, description: "print url of given contest"
       OIJ.add_contest_flags
 
@@ -98,12 +98,21 @@ module OIJ
       end
     end
 
-    class GetDirectory < Admiral::Command
+    class PorblemDirectory < Admiral::Command
       define_help short: h, description: "print directory of given problem"
       OIJ.add_problem_flags
 
       def run
         puts get_problem.to_directory
+      end
+    end
+
+    class ContestDirectory < Admiral::Command
+      define_help short: h, description: "print directory of given contest"
+      OIJ.add_contest_flags
+
+      def run
+        puts get_contest.to_directory
       end
     end
 
@@ -178,9 +187,10 @@ module OIJ
     register_sub_command t, CompileAndTest
     register_sub_command "edit-test", EditTestcase, short: "et"
     register_sub_command "print-test", PrintTestcase, short: "pt"
-    register_sub_command url, GetProblemURL
-    register_sub_command "url-contest", GetContestURL, short: "urlc"
-    register_sub_command dir, GetDirectory
+    register_sub_command url, ProblemURL
+    register_sub_command "url-contest", ContestURL, short: "urlc"
+    register_sub_command dir, PorblemDirectory
+    register_sub_command "dir-contest", ContestDirectory, short: "dirc"
     register_sub_command download, Download, short: "d"
     register_sub_command bundle, Bundle
     register_sub_command submit, Submit, short: "s"
