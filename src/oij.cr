@@ -11,7 +11,7 @@ module OIJ
     define_version "0.1.0", short: v
 
     class Compile < Admiral::Command
-      define_help short: h, description: "compile given file"
+      define_help short: h, description: "Compile given file."
       define_argument file, required: true
 
       def run
@@ -20,7 +20,7 @@ module OIJ
     end
 
     class Execute < Admiral::Command
-      define_help short: h, description: "execute given file"
+      define_help short: h, description: "Execute given file."
       define_argument file, required: true
       define_argument input_file
 
@@ -30,7 +30,7 @@ module OIJ
     end
 
     class CompileAndExecute < Admiral::Command
-      define_help short: h, description: "compile and execute given file"
+      define_help short: h, description: "Compile and execute given file."
       define_argument file, required: true
       define_argument input_file
 
@@ -40,7 +40,7 @@ module OIJ
     end
 
     class Test < Admiral::Command
-      define_help short: h, description: "test given file"
+      define_help short: h, description: "Test given file."
       define_argument file, required: true
 
       def run
@@ -49,7 +49,7 @@ module OIJ
     end
 
     class CompileAndTest < Admiral::Command
-      define_help short: h, description: "compile and test given file"
+      define_help short: h, description: "Compile and test given file."
       define_argument file, required: true
 
       def run
@@ -58,7 +58,7 @@ module OIJ
     end
 
     class EditTestcase < Admiral::Command
-      define_help short: h, description: "edit given testcase"
+      define_help short: h, description: "Edit given testcase."
       define_argument name, required: true
 
       define_flag dir : String, default: "test", short: d,
@@ -70,7 +70,7 @@ module OIJ
     end
 
     class PrintTestcase < Admiral::Command
-      define_help short: h, description: "print given testcase"
+      define_help short: h, description: "Print given testcase."
       define_argument name, required: true
       define_flag dir : String, default: "test", short: d,
         description: "a directory name for testcases (default: test)"
@@ -81,7 +81,7 @@ module OIJ
     end
 
     class ProblemURL < Admiral::Command
-      define_help short: h, description: "print url of given problem"
+      define_help short: h, description: "Print url of given problem."
       OIJ.define_problem_flags
 
       def run
@@ -90,7 +90,7 @@ module OIJ
     end
 
     class ContestURL < Admiral::Command
-      define_help short: h, description: "print url of given contest"
+      define_help short: h, description: "Print url of given contest."
       OIJ.define_contest_flags
 
       def run
@@ -99,7 +99,7 @@ module OIJ
     end
 
     class PorblemDirectory < Admiral::Command
-      define_help short: h, description: "print directory of given problem"
+      define_help short: h, description: "Print directory of given problem."
       OIJ.define_problem_flags
 
       def run
@@ -108,7 +108,7 @@ module OIJ
     end
 
     class ContestDirectory < Admiral::Command
-      define_help short: h, description: "print directory of given contest"
+      define_help short: h, description: "Print directory of given contest."
       OIJ.define_contest_flags
 
       def run
@@ -117,7 +117,7 @@ module OIJ
     end
 
     class Bundle < Admiral::Command
-      define_help short: h, description: "bundle given file"
+      define_help short: h, description: "Bundle given file"
       define_argument file, required: true
 
       def run
@@ -126,7 +126,7 @@ module OIJ
     end
 
     class Submit < Admiral::Command
-      define_help short: h, description: "submit given code"
+      define_help short: h, description: "Submit bundled file."
       define_argument file, required: true
 
       def run
@@ -135,7 +135,7 @@ module OIJ
     end
 
     class DownloadProblem < Admiral::Command
-      define_help short: h, description: "download testcases"
+      define_help short: h, description: "Download testcases of given problem."
       define_flag silent : Bool, short: s, description: "silent mode"
       OIJ.define_problem_flags
 
@@ -145,7 +145,7 @@ module OIJ
     end
 
     class DownloadContest < Admiral::Command
-      define_help short: h, description: "download testcases"
+      define_help short: h, description: "Download testcases of given contest."
       define_flag silent : Bool, short: s, description: "silent mode"
       OIJ.define_contest_flags
 
@@ -155,7 +155,7 @@ module OIJ
     end
 
     class Template < Admiral::Command
-      define_help short: h, description: "generate templates"
+      define_help short: h, description: "Generate templates."
       define_flag ext : Array(String), short: e,
         description: "specify generated extensions (if not given, generate all templates)"
 
@@ -171,7 +171,7 @@ module OIJ
     end
 
     class PrepareProblem < Admiral::Command
-      define_help short: h, description: "prepare given problem"
+      define_help short: h, description: "Prepare for given problem."
       OIJ.define_problem_flags
 
       def run
@@ -182,7 +182,7 @@ module OIJ
     end
 
     class PrepareContest < Admiral::Command
-      define_help short: h, description: "prepare contest"
+      define_help short: h, description: "Prepare for given contest."
       OIJ.define_contest_flags
 
       def run
