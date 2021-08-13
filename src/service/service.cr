@@ -96,6 +96,8 @@ module OIJ
   end
 
   abstract struct Contest
+    abstract def succ(strict = false)
+    abstract def pred(strict = false)
     abstract def problems
     abstract def to_directory : Path
     abstract def to_url : String

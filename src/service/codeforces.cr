@@ -93,9 +93,29 @@ module OIJ
 
     def problems
       contest_json = OIJ.oj_api("get-contest", to_url)
-      contest_json["problems"].as_a.map { |problem_json|
+      contest_json["problems"].as_a.map do |problem_json|
         CodeforcesProblem.from_url?(problem_json["url"].as_s).not_nil!
-      }
+      end
+    end
+
+    def succ(strict = false)
+      next_contest = contest.to_i.succ.to_s
+      result = CodeforcesContest.new(next_contest)
+      if strict
+        url = result.to_url
+        OIJ.error("Invalid contest: #{url}") unless OIJ.oj_api_success?("get-contest", url)
+      end
+      result
+    end
+
+    def pred(strict = false)
+      prev_contest = contest.to_i.pred.to_s
+      result = CodeforcesContest.new(prev_contest)
+      if strict
+        url = result.to_url
+        OIJ.error("Invalid contest: #{url}") unless OIJ.oj_api_success?("get-contest", url)
+      end
+      result
     end
 
     def to_directory : Path

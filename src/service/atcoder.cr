@@ -104,6 +104,28 @@ module OIJ
       end
     end
 
+    def succ(strict = false)
+      contest =~ /(.*?)(\d*)$/
+      next_contest = $1 + $2.to_i.succ.to_s.rjust($2.size, '0')
+      result = AtCoderContest.new(next_contest)
+      if strict
+        url = result.to_url
+        OIJ.error("Invalid contest: #{url}") unless OIJ.oj_api_success?("get-contest", url)
+      end
+      result
+    end
+
+    def pred(strict = false)
+      contest =~ /(.*?)(\d*)$/
+      prev_contest = $1 + $2.to_i.pred.to_s.rjust($2.size, '0')
+      result = AtCoderContest.new(prev_contest)
+      if strict
+        url = result.to_url
+        OIJ.error("Invalid contest: #{url}") unless OIJ.oj_api_success?("get-contest", url)
+      end
+      result
+    end
+
     def to_directory : Path
       Path[OIJ::Config.path("atcoder")] / contest
     end
