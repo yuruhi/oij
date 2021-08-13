@@ -82,7 +82,7 @@ module OIJ
 
     class ProblemURL < Admiral::Command
       define_help short: h, description: "print url of given problem"
-      OIJ.add_problem_flags
+      OIJ.define_problem_flags
 
       def run
         puts get_problem.to_url
@@ -91,7 +91,7 @@ module OIJ
 
     class ContestURL < Admiral::Command
       define_help short: h, description: "print url of given contest"
-      OIJ.add_contest_flags
+      OIJ.define_contest_flags
 
       def run
         puts get_contest.to_url
@@ -100,7 +100,7 @@ module OIJ
 
     class PorblemDirectory < Admiral::Command
       define_help short: h, description: "print directory of given problem"
-      OIJ.add_problem_flags
+      OIJ.define_problem_flags
 
       def run
         puts get_problem.to_directory
@@ -109,7 +109,7 @@ module OIJ
 
     class ContestDirectory < Admiral::Command
       define_help short: h, description: "print directory of given contest"
-      OIJ.add_contest_flags
+      OIJ.define_contest_flags
 
       def run
         puts get_contest.to_directory
@@ -119,7 +119,7 @@ module OIJ
     class Download < Admiral::Command
       define_help short: h, description: "download testcases"
       define_flag silent : Bool, short: s, description: "silent mode"
-      OIJ.add_problem_flags
+      OIJ.define_problem_flags
 
       def run
         get_problem.download(silent: flags.silent, args: OIJ.after_two_hyphens)
@@ -160,9 +160,9 @@ module OIJ
       end
     end
 
-    class Prepare < Admiral::Command
+    class PrepareProblem < Admiral::Command
       define_help short: h, description: "prepare given problem"
-      OIJ.add_problem_flags
+      OIJ.define_problem_flags
 
       def run
         problem = get_problem
@@ -173,29 +173,29 @@ module OIJ
 
     class PrepareContest < Admiral::Command
       define_help short: h, description: "prepare contest"
-      OIJ.add_contest_flags
+      OIJ.define_contest_flags
 
       def run
         get_contest.prepare(silent: true, args: OIJ.after_two_hyphens)
       end
     end
 
-    register_sub_command compile, Compile
-    register_sub_command exe, Execute
-    register_sub_command run, CompileAndExecute
-    register_sub_command test, Test
-    register_sub_command t, CompileAndTest
+    register_sub_command "compile", Compile
+    register_sub_command "exe", Execute
+    register_sub_command "run", CompileAndExecute
+    register_sub_command "test", Test
+    register_sub_command "t", CompileAndTest
     register_sub_command "edit-test", EditTestcase, short: "et"
     register_sub_command "print-test", PrintTestcase, short: "pt"
-    register_sub_command url, ProblemURL
+    register_sub_command "url", ProblemURL
     register_sub_command "url-contest", ContestURL, short: "urlc"
-    register_sub_command dir, PorblemDirectory
+    register_sub_command "dir", PorblemDirectory
     register_sub_command "dir-contest", ContestDirectory, short: "dirc"
-    register_sub_command download, Download, short: "d"
-    register_sub_command bundle, Bundle
-    register_sub_command submit, Submit, short: "s"
-    register_sub_command template, Template
-    register_sub_command prepare, Prepare, short: "p"
+    register_sub_command "download", Download, short: "d"
+    register_sub_command "bundle", Bundle
+    register_sub_command "submit", Submit, short: "s"
+    register_sub_command "template", Template
+    register_sub_command "prepare", PrepareProblem, short: "p"
     register_sub_command "prepare-contest", PrepareContest, short: "pc"
 
     def run

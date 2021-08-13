@@ -1,5 +1,5 @@
 module OIJ
-  macro add_problem_flags
+  macro define_problem_flags
     define_argument url, description: "specify problem url"
     define_flag atcoder, short: a,
       description: "specify atcoder problem"
@@ -33,7 +33,7 @@ module OIJ
     end
   end
 
-  macro add_contest_flags
+  macro define_contest_flags
     define_argument url, description: "specify contest url"
     define_flag atcoder, short: a,
       description: "specify atcoder contest"
