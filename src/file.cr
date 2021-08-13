@@ -45,9 +45,10 @@ module OIJ
   end
 
   def self.bundled_file(file : Path) : File
-    bundler = OIJ::Config.bundler(file.extension[1..]) {
-      OIJ.error("Not found bundler for #{file.extension}")
-    }
+    bundler = OIJ::Config.bundler?(file.extension[1..])
+    if bundler.nil?
+      return File.new(file)
+    end
     File.tempfile("bundled", file.extension) do |tmp|
       command = "#{bundler} #{file}"
       OIJ.info("$ #{command}")
