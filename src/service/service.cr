@@ -21,7 +21,7 @@ module OIJ
     end
 
     def self.from_directory(directory : Path) : self
-      from_directory?(directory) || OIJ.error("Invalid directory: #{directory}")
+      from_directory?(directory) || OIJ.error("Invalid problem directory: #{directory}")
     end
 
     def self.from_url?(url : String) : self?
@@ -111,7 +111,7 @@ module OIJ
     end
 
     def self.from_directory(directory : Path) : self
-      from_directory?(directory) || OIJ.error("Invalid directory: #{directory}")
+      from_directory?(directory) || OIJ.error("Invalid contest directory: #{directory}")
     end
 
     def self.from_url?(url : String) : self?
