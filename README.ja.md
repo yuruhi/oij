@@ -2,11 +2,11 @@
 
 oij is a competitive programming helper.
 
-## Installation
+## インストール
 
-### from source
+### ソースから
 
-First you'll need to install [Crystal](https://crystal-lang.org/install/).
+Crystal 言語の[インストール](https://ja.crystal-lang.org/install/)が必要です。
 
 ```sh
 $ cd <your favorite directory>
@@ -15,7 +15,7 @@ $ shards build --release
 $ cp bin/oij <your favorite bin>
 ```
 
-## Usage
+## 使い方
 
 ```
 Usage:
@@ -48,7 +48,7 @@ Subcommands:
   url-contest, urlc     # Print url of given contest.
 ```
 
-## config
+## 設定
 
 ```yaml
 compile:
