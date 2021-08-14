@@ -15,22 +15,24 @@ module OIJ
     end
   end
 
-  def self.compile_command?(file : Path) : String?
+  def self.compile_command?(file : Path, option : String?) : String?
     extension = file.extension[1..]
-    if command = OIJ::Config.compile?(extension)
-      command.gsub("${file}", file)
-    end
+    OIJ::Config.compile?(extension, option).try &.gsub("${file}", file)
   end
 
-  def self.compile?(file : Path) : Bool
-    command = compile_command?(file) || return true
+  def self.compile_command(file : Path, option : String?) : String
+    compile_command?(file, option) ||
+      OIJ.error "Not found compile command: #{file.extension}" +
+                (option.nil? ? "" : " (option: #{option})")
+  end
+
+  def self.compile?(file : Path, option : String?) : Bool
+    command = compile_command?(file, option) || return true
     system command
   end
 
-  def self.compile(file : Path) : Bool
-    command = compile_command?(file) ||
-              OIJ.error("Not found compile command: #{file.extension}")
-    system command
+  def self.compile(file : Path, option : String?) : Bool
+    system compile_command(file, option)
   end
 
   def self.execute(file : Path, input_file : String?)
@@ -38,8 +40,8 @@ module OIJ
     system execute_command(file, input_file)
   end
 
-  def self.run(file : Path, input_file : String?)
-    compile?(file) || OIJ.error("Compile error")
+  def self.run(file : Path, input_file : String?, option : String?)
+    compile?(file, option) || OIJ.error("Compile error")
     execute(file, input_file)
   end
 
@@ -47,8 +49,8 @@ module OIJ
     system "oj test -c '#{execute_command(file, nil)}'"
   end
 
-  def self.compile_and_test(file : Path)
-    compile?(file) || OIJ.error("Compile error")
+  def self.compile_and_test(file : Path, option : String?)
+    compile?(file, option) || OIJ.error("Compile error")
     system "oj test -c '#{execute_command(file, nil)}'"
   end
 end

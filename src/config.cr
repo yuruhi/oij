@@ -63,7 +63,26 @@ module OIJ
       end
     end
 
-    define_hash_getter "compile", String
+    private macro define_hash_getter2(key)
+      def self.{{key.id}}?(key : String, option : String?)
+        elem1 = (config[{{key}}]? || return nil).as_h? || OIJ.error(%[config[{{key}}] is not Hash])
+        elem2 = elem1[key]? || return nil
+        if str = elem2.as_s?
+          option.nil? ? str : nil
+        elsif hash = elem2.as_h?
+          (hash[option || "default"]? || return nil).as_s? ||
+            OIJ.error(%[config[{{key}}][#{key}][#{option}] is not String])
+        else
+          OIJ.error(%[config[{{key}}][#{key}] is neither String nor Hash])
+        end
+      end
+
+      def self.{{key.id}}(key : String, option : String?, &block)
+        {{key.id}}?(key, option) || yield
+      end
+    end
+
+    # define_hash_getter "compile", String
     define_hash_getter "execute", String
     define_hash_getter "path" do
       Path[e.as_s? || OIJ.error(%[config[path][#{key}] is not String])]
@@ -100,5 +119,8 @@ module OIJ
         {elem[0].as_s, elem[1].as_s}
       end
     end
+
+    define_hash_getter2 "compile"
+    define_hash_getter2 "execute"
   end
 end

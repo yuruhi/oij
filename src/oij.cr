@@ -13,9 +13,10 @@ module OIJ
     class Compile < Admiral::Command
       define_help short: h, description: "Compile given file."
       define_argument file, required: true
+      define_flag option, short: o
 
       def run
-        OIJ.compile(Path[arguments.file])
+        OIJ.compile(Path[arguments.file], flags.option)
       end
     end
 
@@ -33,9 +34,10 @@ module OIJ
       define_help short: h, description: "Compile and execute given file."
       define_argument file, required: true
       define_argument input_file
+      define_flag option, short: o
 
       def run
-        OIJ.run(Path[arguments.file], arguments.input_file)
+        OIJ.run(Path[arguments.file], arguments.input_file, flags.option)
       end
     end
 
@@ -51,9 +53,10 @@ module OIJ
     class CompileAndTest < Admiral::Command
       define_help short: h, description: "Compile and test given file."
       define_argument file, required: true
+      define_flag option, short: o
 
       def run
-        OIJ.compile_and_test(Path[arguments.file])
+        OIJ.compile_and_test(Path[arguments.file], flags.option)
       end
     end
 
