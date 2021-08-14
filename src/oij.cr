@@ -2,7 +2,7 @@ require "admiral"
 require "./command"
 require "./testcase"
 require "./template"
-require "./service/service"
+require "./service"
 require "./cli_helper"
 
 module OIJ

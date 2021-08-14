@@ -1,4 +1,4 @@
-require "./service"
+require "../service"
 
 module OIJ
   struct AtCoderProblem < Problem

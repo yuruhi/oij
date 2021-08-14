@@ -1,9 +1,9 @@
 require "yaml"
 require "json"
-require "../utility"
-require "../config"
-require "../api"
-require "../command"
+require "./utility"
+require "./config"
+require "./api"
+require "./command"
 
 module OIJ
   abstract struct Problem
@@ -139,4 +139,4 @@ module OIJ
   end
 end
 
-require "./*"
+require "./service/*"
