@@ -58,13 +58,13 @@ module OIJ
       end
     end
 
-    def submit(file : Path) : Nil
+    def submit(file : Path, * , args) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
         OIJ.error("No such directory: #{dir}")
       end
       Dir.cd(dir)
-      OIJ.system "oj s #{to_url} #{file}"
+      OIJ.system "oj s #{to_url} #{file} #{args ? %["${@}" ] : ""}", args
     end
 
     def bundle(file : Path) : Nil
@@ -76,9 +76,9 @@ module OIJ
       OIJ.system "#{OIJ::Config.bundler(file.extension[1..])} #{file}"
     end
 
-    def bundle_and_submit(file : Path) : Nil
+    def bundle_and_submit(file : Path, *, args) : Nil
       bundled = OIJ.bundled_file(file.expand(to_directory))
-      submit(Path[bundled.path])
+      submit(Path[bundled.path], args: args)
     end
 
     def prepare(*, silent, args) : Nil

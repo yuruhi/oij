@@ -133,7 +133,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        Problem.current.bundle_and_submit(Path[arguments.file])
+        Problem.current.bundle_and_submit(Path[arguments.file], args: OIJ.after_two_hyphens)
       end
     end
 
