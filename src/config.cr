@@ -82,7 +82,7 @@ module OIJ
       end
     end
 
-    # define_hash_getter "compile", String
+    define_hash_getter2 "compile"
     define_hash_getter "execute", String
     define_hash_getter "path" do
       Path[e.as_s? || OIJ.error(%[config[path][#{key}] is not String])]
@@ -119,8 +119,5 @@ module OIJ
         {elem[0].as_s, elem[1].as_s}
       end
     end
-
-    define_hash_getter2 "compile"
-    define_hash_getter2 "execute"
   end
 end
