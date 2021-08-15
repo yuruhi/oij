@@ -103,11 +103,6 @@ $ oij run a.cr input
 
 `--` の後のオプションはそのまま `oj` に渡されます。
 
-```crystal
-# a.cr
-puts read_line.to_i * 2
-```
-
 ```sh
 $ oij compile a.cr
 [INFO] $ crystal build a.cr -o a.out
@@ -212,7 +207,7 @@ $ oij dir-contest --atcoder agc001_a
 
 ### `bundle`
 
-設定されたコマンドに与えられたファイルを渡して実行します。
+設定されたコマンドに、与えられたファイルを渡して実行します。
 
 ファイル分割されたプログラムを一つのファイルに展開するコマンド（C++ の場合は [oj-bundle](https://github.com/online-judge-tools/verification-helper/blob/master/README.ja.md#include-の自動展開) など）を指定することが想定されています。
 
@@ -236,6 +231,7 @@ bundler:
 ~/contest/AtCoder/agc001/agc001_a$ oij s a.cr
 [INFO] $ cr-bundle a.cr
 [INFO] $ oj s https://atcoder.jp/contests/abc213/tasks/abc213_a /tmp/bundled.e3lK5W.cr
+...
 ```
 
 ### `download`, `d`
