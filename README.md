@@ -389,7 +389,7 @@ $ oij pc --atcoder abc006
 -   `--prev`, `-p` : 現在のディレクトリに対応するコンテストの前のコンテストを指定
 -   `--strict`, `-s` : `--next`, `--prev` に対して、厳密に決める
 
-| オプション                        | 問題                                            |
+| オプション                        | コンテスト                                      |
 | --------------------------------- | ----------------------------------------------- |
 | `--atcoder agc001`                | https://atcoder.jp/contests/agc001              |
 | `--codeforces 1000`               | https://codeforces.com/contest/1000             |
