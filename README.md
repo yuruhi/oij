@@ -373,7 +373,7 @@ $ oij pc --atcoder abc006
 | `--yukicoder 1`                              | https://yukicoder.me/problems/no/1                                |
 | `--codeforces 1000/A`                        | https://codeforces.com/contest/1000/problem/A                     |
 | `--next` (at agc001/agc001_a)                | https://atcoder.jp/contests/agc001/tasks/agc001_b                 |
-| `--prev` (at agc001/agc001_a)                | https://atcoder.jp/contests/agc001/tasks/agc001_\` (invalid)      |
+| `--prev` (at agc001/agc001_a)                | https://atcoder.jp/contests/agc001/tasks/agc001_` (invalid)      |
 | `--prev --strict` (at agc001/agc001_a)       | error                                                             |
 | `--next` (at typical90/typical90_z)          | https://atcoder.jp/contests/typical90/tasks/typical90_{ (invalid) |
 | `--next --strict` (at typical90/typical90_z) | https://atcoder.jp/contests/typical90/tasks/typical90_aa          |
