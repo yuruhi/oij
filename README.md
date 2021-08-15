@@ -36,8 +36,8 @@ $ cp bin/oij <your favorite bin>
 -   `submit`, `s`: 与えられたファイルを現在のディレクトリに対応する問題に提出します。
 -   `download`, `d`: 与えられた問題の入出力例をその問題に対応するディレクトリにダウンロードします。
 -   `download-contest`, `dc`: 与えられたコンテストの各問題の入出力例をその問題に対応するディレクトリにダウンロードします。
--   `template`: 与えられた拡張子（与えられなかった場合は全て）のテンプレートを生成します。
--   `prepare`, `p`: `download` と `tecmplate` を実行します。
+-   `template`: 現在のディレクトリにテンプレートを生成します。
+-   `prepare`, `p`: 与えられた問題についてテストケースのダウンロードとテンプレートの生成をします。
 -   `prepare-contest`, `pc`: 与えられたコンテストの各問題について `prepare` を実行します。
 
 `oij` の設定は `~/.config/oij/config.yml` で行えます。
@@ -126,8 +126,7 @@ $ oij test a.cr -- -e=1e-5
 ### `edit-test`, `et`
 
 与えられたテストケースをエディターで開きます。
-
--   `--dir`, `-d` : テストケースが入ったディレクトリを指定する (default: `test`)
+`--dir`, `-d` でテストケースが入ったディレクトリを指定できます(デフォルト: `test`)。
 
 使用するエディターは `editor` で指定します。指定されていない場合は環境変数 `EDITOR` を使います。
 
@@ -147,8 +146,7 @@ $ et sample-1 -d sample
 ### `print-test`, `pt`
 
 与えられたテストケースを表示します。
-
--   `--dir`, `-d` : テストケースが入ったディレクトリを指定する (default: `test`)
+`--dir`, `-d` でテストケースが入ったディレクトリを指定できます(デフォルト: `test`)。
 
 表示に使用するコマンドを `printer` で指定することもできます。
 
@@ -253,8 +251,7 @@ bundler:
 ### `download-contest`, `dc`
 
 与えられたコンテストの各問題の入出力例をその問題に対応するディレクトリにダウンロードします。（[コンテストの指定](#コンテストの指定)ができます）
-
--   `--silent`, `-s` : `oj d` の出力を表示させない
+`--silent`, `-s` で `oj d` の出力を非表示にできます。
 
 `--` の後のオプションはそのまま `oj` に渡されます。
 
@@ -279,11 +276,10 @@ $ oij dc --atcoder abc005 -s
 
 ### `template`
 
-与えられた拡張子（与えられなかった場合は全て）のテンプレートを生成します。
+現在のディレクトリに `--ext`, `-e` で指定された言語（指定されなかった場合はすべて）のテンプレートを生成します。
 
--   `--ext`, `-e` : 拡張子を指定
-
-`config.yml` にテンプレートファイル（絶対パス）とファイル名を拡張子ごとに指定します。テンプレートファイルが、指定されたファイル名にそのままコピーされます。
+`config.yml` にテンプレートファイル（絶対パス）とファイル名を拡張子ごとに指定します。
+テンプレートファイルを指定されたファイル名にそのままコピーします。
 
 ```yaml
 template:
@@ -373,7 +369,7 @@ $ oij pc --atcoder abc006
 | `--yukicoder 1`                              | https://yukicoder.me/problems/no/1                                |
 | `--codeforces 1000/A`                        | https://codeforces.com/contest/1000/problem/A                     |
 | `--next` (at agc001/agc001_a)                | https://atcoder.jp/contests/agc001/tasks/agc001_b                 |
-| `--prev` (at agc001/agc001_a)                | https://atcoder.jp/contests/agc001/tasks/agc001_` (invalid)      |
+| `--prev` (at agc001/agc001_a)                | https://atcoder.jp/contests/agc001/tasks/agc001_` (invalid)       |
 | `--prev --strict` (at agc001/agc001_a)       | error                                                             |
 | `--next` (at typical90/typical90_z)          | https://atcoder.jp/contests/typical90/tasks/typical90_{ (invalid) |
 | `--next --strict` (at typical90/typical90_z) | https://atcoder.jp/contests/typical90/tasks/typical90_aa          |
