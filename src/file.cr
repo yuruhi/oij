@@ -45,7 +45,7 @@ module OIJ
   end
 
   def self.bundled_file(file : Path) : File
-    bundler = OIJ::Config.bundler?(file.extension[1..])
+    bundler = OIJ::Config.bundler?(file.extension[1..]).try &.gsub("${file}", file)
     if bundler.nil?
       return File.new(file)
     end
