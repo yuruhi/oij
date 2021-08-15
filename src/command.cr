@@ -45,12 +45,12 @@ module OIJ
     execute(file, input_file)
   end
 
-  def self.test(file : Path)
-    system "oj test -c '#{execute_command(file, nil)}'"
+  def self.test(file : Path, args)
+    system "oj test -c '#{execute_command(file, nil)}' #{args ? %["${@}" ] : ""}", args
   end
 
-  def self.compile_and_test(file : Path, option : String?)
+  def self.compile_and_test(file : Path, option : String?, args)
     compile?(file, option) || OIJ.error("Compile error")
-    system "oj test -c '#{execute_command(file, nil)}'"
+    system "oj test -c '#{execute_command(file, nil)}' #{args ? %["${@}" ] : ""}", args
   end
 end

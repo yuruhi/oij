@@ -46,7 +46,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        OIJ.test(Path[arguments.file])
+        OIJ.test(Path[arguments.file], OIJ.after_two_hyphens)
       end
     end
 
@@ -56,7 +56,7 @@ module OIJ
       define_flag option, short: o
 
       def run
-        OIJ.compile_and_test(Path[arguments.file], flags.option)
+        OIJ.compile_and_test(Path[arguments.file], flags.option, OIJ.after_two_hyphens)
       end
     end
 
