@@ -4,7 +4,7 @@ require "./utility"
 module OIJ
   class Config
     class_getter(config) do
-      YAML.parse File.new("/home/yuruhiya/programming/oij/config/oij.yml")
+      YAML.parse File.new(Path["~/.config/oij/config.yml"].expand(home: true))
     end
 
     private macro define_getter(key, &type_check)
