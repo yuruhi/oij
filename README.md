@@ -257,19 +257,19 @@ bundler:
 
 ```
 $ oij dc --atcoder abc005 -s
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_1 in ~/programming/contest/AtCoder/abc005/abc005_1
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_1 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_1
 [INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_1
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_1  > /dev/null
 
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_2 in ~/programming/contest/AtCoder/abc005/abc005_2
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_2 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_2
 [INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_2
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_2  > /dev/null
 
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_3 in ~/programming/contest/AtCoder/abc005/abc005_3
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_3 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_3
 [INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_3
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_3  > /dev/null
 
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_4 in ~/programming/contest/AtCoder/abc005/abc005_4
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_4 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_4
 [INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_4
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_4  > /dev/null
 ```
@@ -308,16 +308,16 @@ $ oij template # same to oij `template -e cr -e cpp`
 `--` の後のオプションはそのまま `oj d` に渡されます。
 
 ```sh
-~/contest/AtCoder/abc213$ oij p --atcoder abc213_a
+/home/yuruhiya/contest/AtCoder/abc213$ oij p --atcoder abc213_a
 [INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
-[INFO] Generate template file in ~/programming/contest/AtCoder/abc213/abc213_a/a.cr
+[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc213/abc213_a/a.cr
 /home/yuruhiya/programming/contest/AtCoder/abc213/abc213_a
 
-~/contest/AtCoder/abc213$ cd `oij p --atcoder abc213_a`
+/home/yuruhiya/contest/AtCoder/abc213$ cd `oij p --atcoder abc213_a`
 [INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
-[INFO] Generate template file in ~/programming/contest/AtCoder/abc213/abc213_a/a.cr
+[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc213/abc213_a/a.cr
 
-~/contest/AtCoder/abc213/abc213_a$ ls
+/home/yuruhiya/contest/AtCoder/abc213/abc213_a$ ls
 a.cr test
 ```
 
@@ -329,25 +329,25 @@ a.cr test
 
 ```
 $ oij pc --atcoder abc006
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_1 in ~/programming/contest/AtCoder/abc006/abc006_1
-[INFO] Make directory: ~/programming/contest/AtCoder/abc006/abc006_1
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_1 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_1
+[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_1
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_1  > /dev/null
-[INFO] Generate template file in ~/programming/contest/AtCoder/abc006/abc006_1/a.cr
+[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_1/a.cr
 
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_2 in ~/programming/contest/AtCoder/abc006/abc006_2
-[INFO] Make directory: ~/programming/contest/AtCoder/abc006/abc006_2
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_2 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_2
+[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_2
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_2  > /dev/null
-[INFO] Generate template file in ~/programming/contest/AtCoder/abc006/abc006_2/a.cr
+[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_2/a.cr
 
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_3 in ~/programming/contest/AtCoder/abc006/abc006_3
-[INFO] Make directory: ~/programming/contest/AtCoder/abc006/abc006_3
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_3 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_3
+[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_3
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_3  > /dev/null
-[INFO] Generate template file in ~/programming/contest/AtCoder/abc006/abc006_3/a.cr
+[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_3/a.cr
 
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_4 in ~/programming/contest/AtCoder/abc006/abc006_4
-[INFO] Make directory: ~/programming/contest/AtCoder/abc006/abc006_4
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_4 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_4
+[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_4
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_4  > /dev/null
-[INFO] Generate template file in ~/programming/contest/AtCoder/abc006/abc006_4/a.cr
+[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_4/a.cr
 ```
 
 ### 問題の指定
