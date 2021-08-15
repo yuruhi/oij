@@ -356,6 +356,8 @@ $ oij pc --atcoder abc006
 
 ### 問題の指定
 
+オプションがない場合は現在のディレクトリに対応する問題が指定されたとみなされます。
+
 -   `--url` : URL を指定
 -   `--atcoder`, `-a` : [AtCoder](https://atcoder.jp) の問題を指定
 -   `--yukicoder`, `-y` : [yukicoder](https://yukicoder.me) の問題を指定
@@ -377,6 +379,8 @@ $ oij pc --atcoder abc006
 | `--next --strict` (at typical90/typical90_z) | https://atcoder.jp/contests/typical90/tasks/typical90_aa          |
 
 ### コンテストの指定
+
+オプションがない場合は現在のディレクトリに対応するコンテストが指定されたとみなされます。
 
 -   `--url` : URL を指定
 -   `--atcoder`, `-a` : [AtCoder](https://atcoder.jp) のコンテストを指定
