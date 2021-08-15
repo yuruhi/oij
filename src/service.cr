@@ -58,7 +58,7 @@ module OIJ
       end
     end
 
-    def submit(file : Path, * , args) : Nil
+    def submit(file : Path, *, args) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
         OIJ.error("No such directory: #{dir}")
