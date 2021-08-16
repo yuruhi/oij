@@ -48,7 +48,7 @@ module OIJ
       end
       Dir.cd(dir)
 
-      args = ["d", to_url]
+      args = ["download", to_url]
       args.concat oj_args if oj_args
       OIJ.info_run("od", args)
       Process.run("oj", args, output: silent ? Process::Redirect::Close : Process::Redirect::Inherit, error: Process::Redirect::Inherit)
@@ -63,7 +63,7 @@ module OIJ
       end
       Dir.cd(dir)
 
-      args = ["s", to_url, file.to_s]
+      args = ["submit", to_url, file.to_s]
       args.concat oj_args if oj_args
       OIJ.info_run("oj", args)
       Process.run("oj", args, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
