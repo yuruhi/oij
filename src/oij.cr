@@ -1,5 +1,6 @@
 require "admiral"
 require "./command"
+require "./random_test"
 require "./testcase"
 require "./template"
 require "./service"
@@ -193,6 +194,43 @@ module OIJ
       end
     end
 
+    class GenerateInput < Admiral::Command
+      define_help short: h, description: "Generate input"
+      define_argument generator, required: true
+      define_argument count : Int32, default: 100, required: true
+      define_flag option, short: o
+
+      def run
+        OIJ.generate_input(Path[arguments.generator], flags.option, arguments.count, OIJ.after_two_hyphens)
+      end
+    end
+
+    class GenerateOutput < Admiral::Command
+      define_help short: h, description: "Generate output"
+      define_argument solver, required: true
+      define_flag option, short: o
+
+      def run
+        OIJ.generate_output(Path[arguments.solver], flags.option, OIJ.after_two_hyphens)
+      end
+    end
+
+    class GenerateHackCase < Admiral::Command
+      define_help short: h, description: "Find hack case"
+      define_argument hack, required: true, description: "Specify your wrong solution."
+      define_argument generator, required: true, description: "Specify program to generate test cases."
+      define_argument solver, required: true, description: "Specify program to generate correct answers."
+      define_flag hack_option, short: h
+      define_flag generator_option, short: g
+      define_flag solver_option, short: s
+
+      def run
+        OIJ.hack(Path[arguments.hack], flags.hack_option,
+          Path[arguments.generator], flags.generator_option,
+          Path[arguments.solver], flags.solver_option)
+      end
+    end
+
     register_sub_command "compile", Compile
     register_sub_command "exe", Execute
     register_sub_command "run", CompileAndExecute
@@ -216,6 +254,10 @@ module OIJ
     register_sub_command "template", GenerateTemplate
     register_sub_command "prepare", PrepareProblem, short: "p"
     register_sub_command "prepare-contest", PrepareContest, short: "pc"
+
+    register_sub_command "generate-input", GenerateInput, short: "gi"
+    register_sub_command "generate-output", GenerateOutput, short: "go"
+    register_sub_command "hack", GenerateHackCase
 
     def run
       puts help
