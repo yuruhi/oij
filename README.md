@@ -505,6 +505,105 @@ $ oij hack a.cpp generate.cpp solve.cpp -o hack
 | `--next` (at typical90/)          | https://atcoder.jp/contests/typical91 (invalid) |
 | `--next --strict` (at typical90/) | error                                           |
 
+### `input_file_mapping`
+
+`exe`, `run` において入力ファイル名を省略したいときに設定します。
+`input_file_mapping` に パターン（正規表現）と置き換えられる文字列の配列を設定します。
+
+[String#sub](<https://crystal-lang.org/api/String.html#sub(pattern:Regex,replacement,backreferences=true):String-instance-method>) が順番に適用されます。
+また、正規表現については[こちら](https://crystal-lang.org/api/1.1.1/Regex.html)をご覧ください。
+
+```yaml
+# config.yml
+input_file_mapping:
+    - ["^s(\\d+)$", "test/sample-\\1.in"]
+    - ["^r(\\d+)$", "test/random-\\1.in"]
+    - ["^h(\\d+)$", "test/hack-\\1.in"]
+```
+
+```console
+$ oij exe a.rb s1
+[INFO] $ ruby a.rb < test/sample-1.in
+
+$ oij exe a.rb h001
+[INFO] $ ruby a.rb < test/random-001.in
+```
+
+### `testcase_mapping`
+
+`print-test`, `edit-test` においてテストケース名（ディレクトリ、拡張子を含まない）を省略したいときに設定します。
+`testcase_mapping` に パターン（正規表現）と置き換えられる文字列の配列を設定します。
+
+[String#sub](<https://crystal-lang.org/api/String.html#sub(pattern:Regex,replacement,backreferences=true):String-instance-method>) が順番に適用されます。
+また、正規表現については[こちら](https://crystal-lang.org/api/1.1.1/Regex.html)をご覧ください。
+
+```yaml
+# config.yml
+input_file_mapping:
+    - ["^s(\\d+)$", "sample-\\1"]
+    - ["^r(\\d+)$", "random-\\1"]
+    - ["^h(\\d+)$", "hack-\\1"]
+
+editor: "vim"
+```
+
+```console
+$ oij edit-test s1
+[INFO] $ vim test/sample-1.in test/sample-1.out
+
+$ oij edit-test r001 -d dir
+[INFO] $ vim dir/random-001.in dir/random-001.out
+```
+
+### `config.yml` の例
+
+```yaml
+compile:
+    cpp:
+        default: "g++ ${file}"
+        fast: "g++ -O3 ${file}"
+        hack: "g++ ${file} -o ${basename_no_extension}"
+    cr:
+        default: "crystal build ${file}"
+        release: "crystal build ${file} --no-debug --release"
+    rb: "ruby -wc ${file}"
+
+execute:
+    cpp:
+        default: "./a.out"
+        fast: "./a.out"
+        hack: "./${basename_no_extension}"
+    cr: "./${basename_no_extension}"
+    rb: "ruby ${file}"
+    py: "python3 ${file}"
+    txt: "cat ${file}"
+
+path:
+    atcoder: "/home/user/contest/AtCoder"
+    yukicoder: "/home/user/contest/yukicoder"
+    codeforces: "/home/user/contest/Codeforces"
+
+bundler:
+    cpp: "oj-bundle -I path/to/your/library ${file}"
+    cr: "cr-bundle -f ${file}"
+
+template:
+    cpp: ["/home/user/.config/oij/template.cpp", "a.cpp"]
+    cr: ["/home/user/.config/oij/template.cr", "a.cr"]
+
+editor: "vim"
+
+input_file_mapping:
+    - ["^s(\\d+)$", "test/sample-\\1.in"]
+    - ["^r(\\d+)$", "test/random-\\1.in"]
+    - ["^h(\\d+)$", "test/hack-\\1.in"]
+
+testcase_mapping:
+    - ["^s(\\d+)$", "sample-\\1"]
+    - ["^r(\\d+)$", "random-\\1"]
+    - ["^h(\\d+)$", "hack-\\1"]
+```
+
 ## Contributing
 
 1. Fork it (<https://github.com/yuruhi/oij/fork>)
