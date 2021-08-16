@@ -50,7 +50,7 @@ module OIJ
 
       args = ["download", to_url]
       args.concat oj_args if oj_args
-      OIJ.info_run("od", args)
+      OIJ.info_run("oj", args)
       Process.run("oj", args, output: silent ? Process::Redirect::Close : Process::Redirect::Inherit, error: Process::Redirect::Inherit)
 
       OIJ.warning("Failed to download: #{to_url}") unless $?.success?
