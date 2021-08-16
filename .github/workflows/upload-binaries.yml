@@ -1,0 +1,47 @@
+name: upload-binaries
+
+on:
+    pull_request:
+    release:
+        types: [published]
+
+jobs:
+    upload-binaries:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest]
+
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up Crystal
+              uses: oprypin/install-crystal@v1
+              with:
+                  crystal: 1.1.1
+
+            - name: Build
+              run: shards build --release
+
+            - name: Compress binary
+              uses: svenstaro/upx-action@2.0.1
+              with:
+                  file: bin/oij
+
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  path: bin/oij
+                  name: oij-${{ runner.os }}
+
+            - name: Upload Release Asset
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ github.event.release.upload_url }}
+                  asset_path: bin/oij
+                  asset_name: oij-${{ github.event.release.tag_name }}-${{ runner.os }}
+                  asset_content_type: application/octet-stream
+              if: github.event_name == 'release'
