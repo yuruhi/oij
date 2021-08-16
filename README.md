@@ -10,7 +10,7 @@
 
 [online-judge-tools](https://github.com/online-judge-tools/oj/blob/master/docs/getting-started.ja.md) と [Crystal](https://ja.crystal-lang.org/install/) のインストールが必要です。
 
-```sh
+```console
 $ cd <your favorite directory>
 $ git clone https://github.com/yuruhi/oij.git && cd oij
 $ shards build --release
@@ -76,7 +76,7 @@ execute:
 puts read_line.to_i * 2
 ```
 
-```sh
+```console
 $ oij compile a.cr # same to `oij compile a.cr -o default`
 [INFO] $ crystal build a.cr -o a.out
 
@@ -106,7 +106,7 @@ $ oij run a.cr input
 `test` は与えられたファイルをテスト、`t` は与えられたファイルをコンパイルしてからテストします。
 `--` の後のオプションはそのまま `oj` に渡されます。
 
-```sh
+```console
 $ oij compile a.cr
 [INFO] $ crystal build a.cr -o a.out
 
@@ -137,7 +137,7 @@ $ oij test a.cr -- -e=1e-5
 editor: "vim"
 ```
 
-```sh
+```console
 $ et sample-1
 [INFO] $ vim test/sample-1.in test/sample-1.out
 
@@ -153,7 +153,7 @@ $ et sample-1 -d sample
 表示に使用するコマンドは `printer` で設定することもできます。
 コマンドにスペースが含まれる場合、引数を表す `"${@}"` を含める必要があります。
 
-```sh
+```console
 $ pt sample-1
 [INFO] test/sample-1.in (2 byte):
 3
@@ -167,7 +167,7 @@ $ pt sample-1
 printer: 'bat --style=header "${@}"'
 ```
 
-```sh
+```console
 [INFO] $ /bin/sh -c bat --style=header "${@}" -- test/sample-1.in test/sample-1.out
 File: test/sample-1.in
 3 6
@@ -180,7 +180,7 @@ File: test/sample-1.out
 
 与えられた[問題](#問題の指定)、[コンテスト](#コンテストの指定)の URL を表示します。
 
-```sh
+```console
 $ oij url --atcoder agc001_a
 https://atcoder.jp/contests/agc001/tasks/agc001_a
 
@@ -208,7 +208,7 @@ path:
     codeforces: "/home/user/contest/Codeforces"
 ```
 
-```sh
+```console
 $ oij dir --atcoder agc001_a
 /home/user/contest/AtCoder/agc001/agc001_a
 
@@ -234,7 +234,7 @@ bundler:
 与えられたファイルを現在のディレクトリに対応する問題に提出します。
 `bundler` が設定されている場合はそのコマンドが出力した内容が提出されます。
 
-```sh
+```console
 /home/user/contest/AtCoder/agc001/agc001_a$ oij s a.rb
 [INFO] $ oj s https://atcoder.jp/contests/abc213/tasks/abc213_a a.rb
 ...
@@ -250,7 +250,7 @@ bundler:
 与えられた[問題](#問題の指定)の入出力例をその問題に対応するディレクトリにダウンロードします。
 `--` の後のオプションはそのまま `oj` に渡されます。
 
-```sh
+```console
 /home/user/contest/AtCoder/agc001/agc001_a$ oij d
 [INFO] $ oj d https://atcoder.jp/contests/agc001/tasks/agc001_a
 
@@ -296,7 +296,7 @@ template:
     cpp: ["/home/user/.config/oij/template.cpp", "a.cpp"]
 ```
 
-```sh
+```console
 $ oij template -e cr
 [INFO] Generate template file in {current path}/a.cr  # a.cr is same to template.cr
 
@@ -310,7 +310,7 @@ $ oij template # same to oij `template -e cr -e cpp`
 与えられた[問題](#問題の指定)に対して `download` と `template` を実行して、最後に問題の URL を出力します。
 `--` の後のオプションはそのまま `oj d` に渡されます。
 
-```sh
+```console
 /home/user/contest/AtCoder/abc213$ oij p --atcoder abc213_a
 [INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc213/abc213_a/a.cr
