@@ -6,6 +6,11 @@
 
 ## インストール
 
+### ビルド済みバイナリから
+
+[リリースページ](https://github.com/yuruhi/oij/releases) から `oij-vA.B.C-Linux` か `oij-vA.B.C-maxOS` をダウンロードしてください。
+また、[online-judge-tools](https://github.com/online-judge-tools/oj/blob/master/docs/getting-started.ja.md) のインストールが必要です。
+
 ### ソースから
 
 [online-judge-tools](https://github.com/online-judge-tools/oj/blob/master/docs/getting-started.ja.md) と [Crystal](https://ja.crystal-lang.org/install/) のインストールが必要です。
