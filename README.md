@@ -48,8 +48,7 @@ $ cp bin/oij <your favorite bin>
 
 `exe`, `run` は第二引数に入力ファイルを指定できます。
 
-`config.yml` では、コンパイルするコマンド、実行するコマンドを拡張子別に設定します。
-`${file}` は与えられたファイル名に置き換えられます。
+`config.yml` では、コンパイルするコマンド、実行するコマンドを拡張子別に設定します。（[変数](#変数)が使えます）
 一つの言語で複数のコンパイルするコマンドを使う場合は `--option`, `-o` で切り替えられます。
 
 ```yaml
@@ -167,7 +166,7 @@ $ pt sample-1
 
 ### `url`, `url-contest`, `urlc`
 
-与えられた問題、コンテストの URL を表示します。（[問題の指定](#問題の指定)、[コンテストの指定](#コンテストの指定)ができます）
+与えられた[問題](#問題の指定)、[コンテスト](#コンテストの指定)の URL を表示します。
 
 ```sh
 $ oij url --atcoder agc001_a
@@ -179,7 +178,7 @@ https://atcoder.jp/contests/agc001
 
 ### `dir`, `dir-contest`, `dirc`
 
-与えられた問題、コンテストに対応するディレクトリを表示します。（[問題の指定](#問題の指定)、[コンテストの指定](#コンテストの指定)ができます）
+与えられた[問題](#問題の指定)、[コンテスト](#コンテストの指定)に対応するディレクトリを表示します。
 
 `config.yml` に `path` に各サービスに対応するディレクトリを絶対パスで指定します。
 
@@ -192,26 +191,25 @@ https://atcoder.jp/contests/agc001
 ```yaml
 # config.yml
 path:
-    atcoder: "/home/yuruhiya/contest/AtCoder"
-    yukicoder: "/home/yuruhiya/contest/yukicoder"
-    codeforces: "/home/yuruhiya/contest/Codeforces"
+    atcoder: "/home/user/contest/AtCoder"
+    yukicoder: "/home/user/contest/yukicoder"
+    codeforces: "/home/user/contest/Codeforces"
 ```
 
 ```sh
 $ oij dir --atcoder agc001_a
-/home/yuruhiya/contest/AtCoder/agc001/agc001_a
+/home/user/contest/AtCoder/agc001/agc001_a
 
 $ oij dir-contest --atcoder agc001_a
-/home/yuruhiya/contest/AtCoder/agc001
+/home/user/contest/AtCoder/agc001
 ```
 
 ### `bundle`
 
 設定されたコマンドに、与えられたファイルを渡して実行します。
 
+コマンドは `bundler` で拡張子ごとに指定します（[変数](#変数)が使えます）。
 ファイル分割されたプログラムを一つのファイルに展開するコマンド（C++ の場合は [oj-bundle](https://github.com/online-judge-tools/verification-helper/blob/master/README.ja.md#include-の自動展開) など）を指定することが想定されています。
-
-`${file}` は与えられたファイル名に置き換えられます。
 
 ```yaml
 bundler:
@@ -221,7 +219,8 @@ bundler:
 
 ### `submit`, `s`
 
-与えられたファイルを現在のディレクトリに対応する問題に提出します。`bundler` が設定されている場合はそのコマンドが出力した内容が提出されます。
+与えられたファイルを現在のディレクトリに対応する問題に提出します。
+`bundler` が設定されている場合はそのコマンドが出力した内容が提出されます。
 
 ```sh
 ~/contest/AtCoder/agc001/agc001_a$ oij s a.rb
@@ -250,27 +249,27 @@ bundler:
 
 ### `download-contest`, `dc`
 
-与えられたコンテストの各問題の入出力例をその問題に対応するディレクトリにダウンロードします。（[コンテストの指定](#コンテストの指定)ができます）
+与えられた[コンテスト](#コンテストの指定)の各問題の入出力例をその問題に対応するディレクトリにダウンロードします。
 `--silent`, `-s` で `oj d` の出力を非表示にできます。
 
 `--` の後のオプションはそのまま `oj` に渡されます。
 
 ```
 $ oij dc --atcoder abc005 -s
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_1 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_1
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_1
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_1 in /home/user/programming/contest/AtCoder/abc005/abc005_1
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_1
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_1  > /dev/null
 
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_2 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_2
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_2
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_2 in /home/user/programming/contest/AtCoder/abc005/abc005_2
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_2
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_2  > /dev/null
 
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_3 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_3
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_3
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_3 in /home/user/programming/contest/AtCoder/abc005/abc005_3
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_3
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_3  > /dev/null
 
-[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_4 in /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_4
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc005/abc005_4
+[INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_4 in /home/user/programming/contest/AtCoder/abc005/abc005_4
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_4
 [INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_4  > /dev/null
 ```
 
@@ -278,18 +277,13 @@ $ oij dc --atcoder abc005 -s
 
 現在のディレクトリに `--ext`, `-e` で指定された言語（指定されなかった場合はすべて）のテンプレートを生成します。
 
-`config.yml` にテンプレートファイル（絶対パス）とファイル名を拡張子ごとに指定します。
+`template` にテンプレートファイル（絶対パス）とファイル名を拡張子ごとに指定します。
 テンプレートファイルを指定されたファイル名にそのままコピーします。
 
 ```yaml
 template:
-    cr: ["/home/yuruhiya/.config/oij/template.cr", "a.cr"]
-    cr: ["/home/yuruhiya/.config/oij/template.cpp", "a.cpp"]
-```
-
-```crystal
-# /home/yuruhiya/.config/oij/template.cr
-require "/template"
+    cr: ["/home/user/.config/oij/template.cr", "a.cr"]
+    cpp: ["/home/user/.config/oij/template.cpp", "a.cpp"]
 ```
 
 ```sh
@@ -303,52 +297,64 @@ $ oij template # same to oij `template -e cr -e cpp`
 
 ### `prepare`, `p`
 
-`download` と `template` を実行して、最後に問題の URL を出力します。（[問題の指定](#問題の指定)ができます）
+与えられた[問題](#問題の指定)に対して `download` と `template` を実行して、最後に問題の URL を出力します。
 
 `--` の後のオプションはそのまま `oj d` に渡されます。
 
 ```sh
-/home/yuruhiya/contest/AtCoder/abc213$ oij p --atcoder abc213_a
+/home/user/contest/AtCoder/abc213$ oij p --atcoder abc213_a
 [INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
-[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc213/abc213_a/a.cr
-/home/yuruhiya/programming/contest/AtCoder/abc213/abc213_a
+[INFO] Generate template file in /home/user/programming/contest/AtCoder/abc213/abc213_a/a.cr
+/home/user/programming/contest/AtCoder/abc213/abc213_a
 
-/home/yuruhiya/contest/AtCoder/abc213$ cd `oij p --atcoder abc213_a`
+/home/user/contest/AtCoder/abc213$ cd `oij p --atcoder abc213_a`
 [INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
-[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc213/abc213_a/a.cr
+[INFO] Generate template file in /home/user/programming/contest/AtCoder/abc213/abc213_a/a.cr
 
-/home/yuruhiya/contest/AtCoder/abc213/abc213_a$ ls
+/home/user/contest/AtCoder/abc213/abc213_a$ ls
 a.cr test
 ```
 
 ### `prepare-contest`, `pc`
 
-与えられたコンテストの各問題について `prepare` を実行します。（[コンテストの指定](#コンテストの指定)ができます）
-
+与えられた[コンテスト](#コンテストの指定)の各問題について `prepare` を実行します。
 `--` の後のオプションはそのまま `oj d` に渡されます。
 
 ```
 $ oij pc --atcoder abc006
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_1 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_1
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_1
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_1 in /home/user/programming/contest/AtCoder/abc006/abc006_1
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_1
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_1  > /dev/null
-[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_1/a.cr
+[INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_1/a.cr
 
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_2 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_2
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_2
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_2 in /home/user/programming/contest/AtCoder/abc006/abc006_2
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_2
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_2  > /dev/null
-[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_2/a.cr
+[INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_2/a.cr
 
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_3 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_3
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_3
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_3 in /home/user/programming/contest/AtCoder/abc006/abc006_3
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_3
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_3  > /dev/null
-[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_3/a.cr
+[INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_3/a.cr
 
-[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_4 in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_4
-[INFO] Make directory: /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_4
+[INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_4 in /home/user/programming/contest/AtCoder/abc006/abc006_4
+[INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_4
 [INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_4  > /dev/null
-[INFO] Generate template file in /home/yuruhiya/programming/contest/AtCoder/abc006/abc006_4/a.cr
+[INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_4/a.cr
 ```
+
+### 変数
+
+`/home/user/directory` で `dir/file.ext` が渡されたとすると以下のように置き換えられます。
+
+| 変数                       | 内容                                |
+| -------------------------- | ----------------------------------- |
+| `${file}`                  | `dir/file.ext`                      |
+| `${basename}`              | `file.ext`                          |
+| `${dirname}`               | `dir`                               |
+| `${basename_no_extension}` | `file`                              |
+| `${relative_file}`         | `/home/user/directory/dir/file.ext` |
+| `${relative_dirname}`      | `/home/user/directory/dir`          |
 
 ### 問題の指定
 

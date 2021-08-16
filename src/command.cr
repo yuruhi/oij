@@ -1,12 +1,13 @@
 require "yaml"
 require "./utility"
+require "./file"
 
 module OIJ
   def self.execute_command(file : Path, input_file : Path?) : String
     extension = file.extension[1..]
     command = OIJ::Config.execute(extension) {
       OIJ.error("Not found execute command: .#{extension}")
-    }.gsub("${file}", file)
+    }.replace_variables(file)
     if input_file
       OIJ.error("Not found input file: #{input_file}") unless File.exists?(input_file)
       "#{command} < #{input_file}"
@@ -17,7 +18,7 @@ module OIJ
 
   def self.compile_command?(file : Path, option : String?) : String?
     extension = file.extension[1..]
-    OIJ::Config.compile?(extension, option).try &.gsub("${file}", file)
+    OIJ::Config.compile?(extension, option).try &.replace_variables(file)
   end
 
   def self.compile_command(file : Path, option : String?) : String

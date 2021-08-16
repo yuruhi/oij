@@ -45,7 +45,7 @@ module OIJ
   end
 
   def self.bundled_file(file : Path) : File
-    bundler = OIJ::Config.bundler?(file.extension[1..]).try &.gsub("${file}", file)
+    bundler = OIJ::Config.bundler?(file.extension[1..]).try &.replace_variables(file)
     if bundler.nil?
       return File.new(file)
     end
@@ -57,6 +57,23 @@ module OIJ
         tmp.print bundled
       else
         OIJ.error("Failed to bundle: #{command}")
+      end
+    end
+  end
+end
+
+class String
+  def replace_variables(file : Path)
+    gsub(/\$\{(.*?)\}/) do |var|
+      case $1
+      when "file"                  then file
+      when "basename"              then file.basename
+      when "dirname"               then file.dirname
+      when "extension"             then file.extension
+      when "basename_no_extension" then file.basename(file.extension)
+      when "relative_file"         then file.expand
+      when "relative_dirname"      then file.expand.dirname
+      else                              var
       end
     end
   end
