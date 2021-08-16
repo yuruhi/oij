@@ -41,16 +41,16 @@ $ cp bin/oij <your favorite bin>
 -   `template`: 現在のディレクトリにテンプレートを生成します。
 -   `prepare`, `p`: 与えられた問題についてテストケースのダウンロードとテンプレートの生成をします。
 -   `prepare-contest`, `pc`: 与えられたコンテストの各問題について `prepare` を実行します。
--   `generate-input`, `gi`: 与えられたファイルを使ってテストケースの入力を生成する。
--   `generate-output`, `go`: 与えられたファイルを使ってテストケースの出力を生成する。
--   `hack`: 間違っているプログラム、入力を生成するプログラム、出力を生成するプログラムを受け取ってハックケースを生成する。
+-   `generate-input`, `gi`: 入力をランダムに生成するプログラムを受け取って、テストケースの入力を生成します。
+-   `generate-output`, `go`: `generate-input` で生成したテストケースを解くプログラムを受け取って、テストケースの出力を生成します。
+-   `hack`: 間違っているプログラム、入力を生成するプログラム、出力を生成するプログラムを受け取ってハックケースを生成します。
 
 ### `compile`, `exe`, `run`
 
 与えられたファイルを `compile` はコンパイル、`exe` は実行、`run` はコンパイルして実行します。
 
 `exe`, `run` は第二引数に入力ファイルを指定できます。
-`compile`, `run` は一つの言語で複数のコンパイルするコマンドを使う場合は `--option`, `-o` で切り替えられます。
+一つの言語で複数のコンパイル・実行するコマンドを使う場合は `--option`, `-o` で切り替えられます。
 
 `compile` にコンパイルするコマンド、実行するコマンドを拡張子別に設定します。（[変数](#変数)が使えます）
 
@@ -58,15 +58,15 @@ $ cp bin/oij <your favorite bin>
 # config.yml
 compile:
     cr:
-        default: "crystal build ${file} -o a.out"
-        release: "crystal build ${file} -o a.out --release"
+        default: "crystal build ${file}"
+        release: "crystal build ${file} --release"
     cpp:
         debug: "g++ -g -fsanitize=undefined,address ${file}"
         fast: "g++ -O3 ${file}"
     rb: "ruby -wc ${file}"
 
 execute:
-    cr: "./a.out"
+    cr: "./${basename_no_extension}"
     cpp: "./a.out"
     rb: "ruby ${file}"
 ```
@@ -78,49 +78,49 @@ puts read_line.to_i * 2
 
 ```console
 $ oij compile a.cr # same to `oij compile a.cr -o default`
-[INFO] $ crystal build a.cr -o a.out
+[INFO] $ crystal build a.cr
 
 $ oij compile a.cr -o release
-[INFO] $ crystal build a.cr -o a.out --release
+[INFO] $ crystal build a.cr --release
 
 $ cat input
 3
 
 $ oij exe a.cr
-[INFO] $ ./a.out
+[INFO] $ ./a
 5  # input
 10 # output
 
 $ oij exe a.cr input
-[INFO] $ ./a.out < input
+[INFO] $ ./a < input
 6
 
 $ oij run a.cr input
-[INFO] $ crystal build a.cr -o a.out
-[INFO] $ ./a.out < input
+[INFO] $ crystal build a.cr
+[INFO] $ ./a < input
 6
 ```
 
 ### `test`, `t`
 
 `test` は与えられたファイルをテスト、`t` は与えられたファイルをコンパイルしてからテストします。
-`--` の後のオプションはそのまま `oj` に渡されます。
+`--` の後のオプションはそのまま `oj test` に渡されます。
 
 ```console
 $ oij compile a.cr
-[INFO] $ crystal build a.cr -o a.out
+[INFO] $ crystal build a.cr
 
 $ oij test a.cr
-[INFO] $ oj test -c './a.out'
+[INFO] $ oj test -c ./a
 ...
 
 $ oij t a.cr
-[INFO] $ crystal build a.cr -o a.out
-[INFO] $ oj test -c './a.out'
+[INFO] $ crystal build a.cr
+[INFO] $ oj test -c ./a
 ...
 
 $ oij test a.cr -- -e=1e-5
-[INFO] $ oj test -c './a.out' -e=1e-5
+[INFO] $ oj test -c ./a -e=1e-5
 ...
 ```
 
@@ -236,51 +236,51 @@ bundler:
 
 ```console
 /home/user/contest/AtCoder/agc001/agc001_a$ oij s a.rb
-[INFO] $ oj s https://atcoder.jp/contests/abc213/tasks/abc213_a a.rb
+[INFO] $ oj submit https://atcoder.jp/contests/abc213/tasks/abc213_a a.rb
 ...
 
 /home/user/contest/AtCoder/agc001/agc001_a$ oij s a.cr
 [INFO] $ cr-bundle a.cr
-[INFO] $ oj s https://atcoder.jp/contests/abc213/tasks/abc213_a /tmp/bundled.e3lK5W.cr
+[INFO] $ oj submit https://atcoder.jp/contests/abc213/tasks/abc213_a /tmp/bundled.e3lK5W.cr
 ...
 ```
 
 ### `download`, `d`
 
 与えられた[問題](#問題の指定)の入出力例をその問題に対応するディレクトリにダウンロードします。
-`--` の後のオプションはそのまま `oj` に渡されます。
+`--` の後のオプションはそのまま `oj download` に渡されます。
 
 ```console
 /home/user/contest/AtCoder/agc001/agc001_a$ oij d
-[INFO] $ oj d https://atcoder.jp/contests/agc001/tasks/agc001_a
+[INFO] $ oj download https://atcoder.jp/contests/agc001/tasks/agc001_a
 
 /home/user/contest/AtCoder/agc001/agc001_a$ oij d --atcoder agc001_b
-[INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_b # at /home/user/contest/AtCoder/agc001/agc001_b
+[INFO] $ oj download https://atcoder.jp/contests/abc213/tasks/abc213_b # at /home/user/contest/AtCoder/agc001/agc001_b
 ```
 
 ### `download-contest`, `dc`
 
 与えられた[コンテスト](#コンテストの指定)の各問題の入出力例をその問題に対応するディレクトリにダウンロードします。
-`--silent`, `-s` で `oj d` の出力を非表示にできます。
-`--` の後のオプションはそのまま `oj` に渡されます。
+`--silent`, `-s` で `oj download` の出力を非表示にできます。
+`--` の後のオプションはそのまま `oj download` に渡されます。
 
 ```
 $ oij dc --atcoder abc005 -s
 [INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_1 in /home/user/programming/contest/AtCoder/abc005/abc005_1
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_1
-[INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_1  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc005/tasks/abc005_1  > /dev/null
 
 [INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_2 in /home/user/programming/contest/AtCoder/abc005/abc005_2
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_2
-[INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_2  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc005/tasks/abc005_2  > /dev/null
 
 [INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_3 in /home/user/programming/contest/AtCoder/abc005/abc005_3
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_3
-[INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_3  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc005/tasks/abc005_3  > /dev/null
 
 [INFO] Download https://atcoder.jp/contests/abc005/tasks/abc005_4 in /home/user/programming/contest/AtCoder/abc005/abc005_4
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc005/abc005_4
-[INFO] $ oj d https://atcoder.jp/contests/abc005/tasks/abc005_4  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc005/tasks/abc005_4  > /dev/null
 ```
 
 ### `template`
@@ -308,16 +308,16 @@ $ oij template # same to oij `template -e cr -e cpp`
 ### `prepare`, `p`
 
 与えられた[問題](#問題の指定)に対して `download` と `template` を実行して、最後に問題の URL を出力します。
-`--` の後のオプションはそのまま `oj d` に渡されます。
+`--` の後のオプションはそのまま `oj download` に渡されます。
 
 ```console
 /home/user/contest/AtCoder/abc213$ oij p --atcoder abc213_a
-[INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc213/abc213_a/a.cr
 /home/user/programming/contest/AtCoder/abc213/abc213_a
 
 /home/user/contest/AtCoder/abc213$ cd `oij p --atcoder abc213_a`
-[INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc213/tasks/abc213_a  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc213/abc213_a/a.cr
 
 /home/user/contest/AtCoder/abc213/abc213_a$ ls
@@ -327,29 +327,119 @@ a.cr test
 ### `prepare-contest`, `pc`
 
 与えられた[コンテスト](#コンテストの指定)の各問題について `prepare` を実行します。
-`--` の後のオプションはそのまま `oj d` に渡されます。
+`--` の後のオプションはそのまま `oj download` に渡されます。
 
 ```
 $ oij pc --atcoder abc006
 [INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_1 in /home/user/programming/contest/AtCoder/abc006/abc006_1
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_1
-[INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_1  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc006/tasks/abc006_1  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_1/a.cr
 
 [INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_2 in /home/user/programming/contest/AtCoder/abc006/abc006_2
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_2
-[INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_2  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc006/tasks/abc006_2  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_2/a.cr
 
 [INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_3 in /home/user/programming/contest/AtCoder/abc006/abc006_3
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_3
-[INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_3  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc006/tasks/abc006_3  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_3/a.cr
 
 [INFO] Prepare https://atcoder.jp/contests/abc006/tasks/abc006_4 in /home/user/programming/contest/AtCoder/abc006/abc006_4
 [INFO] Make directory: /home/user/programming/contest/AtCoder/abc006/abc006_4
-[INFO] $ oj d https://atcoder.jp/contests/abc006/tasks/abc006_4  > /dev/null
+[INFO] $ oj download https://atcoder.jp/contests/abc006/tasks/abc006_4  > /dev/null
 [INFO] Generate template file in /home/user/programming/contest/AtCoder/abc006/abc006_4/a.cr
+```
+
+### `generate-input`, `gi`
+
+入力をランダムに生成するプログラムを受け取って、テストケースの入力を生成します。
+第二引数で生成するテストケースの数を指定できます（デフォルト: 100）。
+一つの言語で複数のコンパイル・実行するコマンドを使う場合は `--option`, `-o` で切り替えられます。
+`--` の後のオプションはそのまま `oj generate-input` に渡されます。
+
+```console
+$ oij gi generate.cr
+[INFO] $ crystal build generate.cr
+[INFO] $ oj generate-input ./generate 100
+...
+
+$ oij gi generate.cr
+[INFO] $ crystal build generate.cr
+[INFO] $ oj generate-input ./generate 10 -d=dir
+...
+```
+
+### `generate-output`, `go`
+
+`generate-input` で生成したテストケースを解くプログラムを受け取って、テストケースの出力を生成します。
+一つの言語で複数のコンパイル・実行するコマンドを使う場合は `--option`, `-o` で切り替えられます。
+`--` の後のオプションはそのまま `oj generate-output` に渡されます。
+
+```console
+$ oij go solve.cr
+[INFO] $ crystal build solve.cr
+[INFO] $ oj generate-output -c ./solve
+...
+
+$ oij go solve.cr -- -d=dir
+[INFO] $ crystal build solve.cr
+[INFO] $ oj generate-output -c ./solve -d=dir
+...
+```
+
+### `hack`
+
+間違っているプログラム 、入力を生成するプログラム、出力を生成するプログラムを受け取ってハックケースを生成します。
+一つの言語で複数のコンパイル・実行するコマンドを使う場合は
+
+-   間違っているプログラムは `--hack-option`, `-h`
+-   入力を生成するプログラムは `--generator-option`, `-g`
+-   出力を生成するプログラムは `--solver-option`, `-s`
+
+で切り替えられます。また、全てのプログラムに適用したい場合は `--option`, `-o` を使います。
+
+`--` の後のオプションはそのまま `oj generate-input` に渡されます。
+
+```console
+$ oij hack a.cr generate.cr solve.cr
+[INFO] $ crystal build a.cr
+[INFO] $ crystal build generate.cr
+[INFO] $ crystal build solve.cr
+[INFO] $ oj generate-input --hack-expected ./solve --hack ./a ./generate
+...
+```
+
+複数のファイルをコンパイルするので、ファイル名によって生成する実行ファイルの名前を変えないと壊れることに注意してください。
+
+```yaml
+# config.yml
+compile:
+    cpp:
+        default: "g++ ${file}"
+        hack: "g++ ${file} -o ${basename_no_extension}"
+
+execute:
+    cpp:
+        default: "./a.out"
+        hack: "./${basename_no_extension}"
+```
+
+```console
+$ oij hack a.cpp generate.cpp solve.cpp
+[INFO] $ g++ a.cpp
+[INFO] $ g++ generate.cpp
+[INFO] $ g++ solve.cpp
+[INFO] $ oj generate-input --hack-expected ./a.out --hack ./a.out ./a.out
+(壊れる)
+
+$ oij hack a.cpp generate.cpp solve.cpp -o hack
+[INFO] $ g++ a.cpp -o a
+[INFO] $ g++ gene.cpp -o gene
+[INFO] $ g++ solve.cpp -o solve
+[INFO] $ oj generate-input --hack-expected ./solve --hack ./a ./generate
+...
 ```
 
 ### 変数
