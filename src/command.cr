@@ -3,7 +3,7 @@ require "./utility"
 require "./file"
 
 module OIJ
-  def self.execute_command(file : Path, input_file : Path?) : String
+  def self.execute_command(file : Path, input_file : Path? = nil) : String
     extension = file.extension[1..]
     command = OIJ::Config.execute(extension) {
       OIJ.error("Not found execute command: .#{extension}")
@@ -29,16 +29,21 @@ module OIJ
 
   def self.compile?(file : Path, option : String?) : Bool
     command = compile_command?(file, option) || return true
+    OIJ.info_run command
     system command
   end
 
   def self.compile(file : Path, option : String?) : Bool
-    system compile_command(file, option)
+    command = compile_command(file, option)
+    OIJ.info_run command
+    system command
   end
 
   def self.execute(file : Path, input_file : String?)
     input_file = normalize_input_file(input_file) if input_file
-    system execute_command(file, input_file)
+    command = execute_command(file, input_file)
+    OIJ.info_run command
+    system command
   end
 
   def self.run(file : Path, input_file : String?, option : String?)
@@ -46,12 +51,15 @@ module OIJ
     execute(file, input_file)
   end
 
-  def self.test(file : Path, args)
-    system "oj test -c '#{execute_command(file, nil)}' #{args ? %["${@}" ] : ""}", args
+  def self.test(file : Path, oj_args : Array(String)?)
+    args = ["test", "-c", execute_command(file)]
+    args.concat oj_args if oj_args
+    OIJ.info_run "oj", args
+    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
-  def self.compile_and_test(file : Path, option : String?, args)
+  def self.compile_and_test(file : Path, option : String?, oj_args : Array(String)?)
     compile?(file, option) || OIJ.error("Compile error")
-    system "oj test -c '#{execute_command(file, nil)}' #{args ? %["${@}" ] : ""}", args
+    OIJ.test(file, oj_args)
   end
 end

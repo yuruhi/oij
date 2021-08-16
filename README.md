@@ -130,6 +130,7 @@ $ oij test a.cr -- -e=1e-5
 `--dir`, `-d` でテストケースが入ったディレクトリを指定できます(デフォルト: `test`)。
 
 使用するエディターは `editor` で設定します。指定されていない場合は環境変数 `EDITOR` を使います。
+コマンドにスペースが含まれる場合、引数を表す `"${@}"` を含める必要があります。
 
 ```yaml
 # config.yml
@@ -150,6 +151,7 @@ $ et sample-1 -d sample
 `--dir`, `-d` でテストケースが入ったディレクトリを指定できます(デフォルト: `test`)。
 
 表示に使用するコマンドは `printer` で設定することもできます。
+コマンドにスペースが含まれる場合、引数を表す `"${@}"` を含める必要があります。
 
 ```sh
 $ pt sample-1
@@ -158,12 +160,20 @@ $ pt sample-1
 
 [INFO] test/sample-1.out (2 byte):
 6
+```
 
-# printer: "cat"
-$ pt sample-1
-[INFO] $ cat test/sample-1.in test/sample-1.out
-3
-6
+```yaml
+# config.yml
+printer: 'bat --style=header "${@}"'
+```
+
+```sh
+[INFO] $ /bin/sh -c bat --style=header "${@}" -- test/sample-1.in test/sample-1.out
+File: test/sample-1.in
+3 6
+
+File: test/sample-1.out
+5
 ```
 
 ### `url`, `url-contest`, `urlc`

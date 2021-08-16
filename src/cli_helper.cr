@@ -63,11 +63,9 @@ module OIJ
     end
   end
 
-  def self.after_two_hyphens(array : Array(String) = ARGV) : Array(String)
+  def self.after_two_hyphens(array : Array(String) = ARGV) : Array(String)?
     if index = array.index("--")
       array[index + 1..]
-    else
-      [] of String
     end
   end
 end

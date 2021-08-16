@@ -1,23 +1,44 @@
 require "./command"
 
 module OIJ
-  def self.generate_input(generator : Path, option : String?, count : Int32?, args : Array(String)?)
+  def self.generate_input(generator : Path, option : String?, count : Int32?, oj_args : Array(String)?)
     compile?(generator, option)
-    system "oj g/i '#{execute_command(generator, nil)}' #{count ? "#{count} " : ""}#{args ? %["${@}" ] : ""}", args
+
+    args = ["generate-input", execute_command(generator)]
+    args << count.to_s if count
+    args.concat oj_args if oj_args
+
+    OIJ.info_run("oj", args)
+    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
-  def self.generate_output(solver : Path, option : String?, args : Array(String)?)
+  def self.generate_output(solver : Path, option : String?, oj_args : Array(String)?)
     compile?(solver, option)
-    system "oj g/o -c '#{execute_command(solver, nil)}' #{args ? %["${@}" ] : ""}", args
+
+    args = ["generate-output", "-c", execute_command(solver)]
+    args.concat oj_args if oj_args
+
+    OIJ.info_run("oj", args)
+    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
   def self.hack(hack : Path, hack_option : String?,
                 generator : Path, generator_option : String?,
                 solver : Path, solver_option : String?,
-                args : Array(String)?)
+                oj_args : Array(String)?)
     compile?(hack, hack_option) || OIJ.error("Compile error: #{hack}")
     compile?(generator, generator_option) || OIJ.error("Compile error: #{generator}")
     compile?(solver, solver_option) || OIJ.error("Compile error: #{solver}")
-    system "oj g/i --hack-expected '#{execute_command(solver, nil)}' --hack '#{execute_command(hack, nil)}' '#{execute_command(generator, nil)}' #{args ? %["${@}" ] : ""}"
+
+    args = [
+      "generate-input",
+      "--hack-expected", execute_command(solver),
+      "--hack", execute_command(hack),
+      execute_command(generator),
+    ]
+    args.concat oj_args if oj_args
+
+    OIJ.info_run("oj", args)
+    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 end

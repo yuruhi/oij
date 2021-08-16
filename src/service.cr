@@ -40,7 +40,7 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(*, silent, args) : Nil
+    def download(silent : Bool, oj_args : Array(String)?) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
         Dir.mkdir_p(dir)
@@ -48,23 +48,25 @@ module OIJ
       end
       Dir.cd(dir)
 
-      cmd = if silent
-              "oj d #{to_url} #{args ? %["${@}" ] : ""}> #{File::NULL}"
-            else
-              "oj d #{to_url} #{args ? %["${@}"] : ""}"
-            end
-      unless OIJ.system(cmd, args)
-        OIJ.warning("Failed to download: #{to_url}")
-      end
+      args = ["d", to_url]
+      args.concat oj_args if oj_args
+      OIJ.info_run("od", args)
+      Process.run("oj", args, output: silent ? Process::Redirect::Close : Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+
+      OIJ.warning("Failed to download: #{to_url}") unless $?.success?
     end
 
-    def submit(file : Path, *, args) : Nil
+    def submit(file : Path, oj_args : Array(String)?) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
         OIJ.error("No such directory: #{dir}")
       end
       Dir.cd(dir)
-      OIJ.system "oj s #{to_url} #{file} #{args ? %["${@}" ] : ""}", args
+
+      args = ["s", to_url, file.to_s]
+      args.concat oj_args if oj_args
+      OIJ.info_run("oj", args)
+      Process.run("oj", args, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
     end
 
     def bundle(file : Path) : Nil
@@ -73,16 +75,19 @@ module OIJ
         OIJ.error("No such directory: #{dir}")
       end
       Dir.cd(dir)
-      OIJ.system "#{OIJ::Config.bundler(file.extension[1..])} #{file}"
+
+      command = OIJ::Config.bundler(file.extension[1..]).replace_variables(file)
+      OIJ.info_run(command)
+      system command
     end
 
-    def bundle_and_submit(file : Path, *, args) : Nil
+    def bundle_and_submit(file : Path, oj_args : Array(String)?) : Nil
       bundled = OIJ.bundled_file(file.expand(to_directory))
-      submit(Path[bundled.path], args: args)
+      submit(Path[bundled.path], oj_args)
     end
 
-    def prepare(*, silent, args) : Nil
-      download(silent: silent, args: args)
+    def prepare(silent : Bool, oj_args : Array(String)?) : Nil
+      download(silent, oj_args)
       OIJ.generate_all_templates
     end
   end
@@ -121,18 +126,18 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(*, silent, args)
+    def download(silent : Bool, oj_args : Array(String)?)
       each do |problem|
         OIJ.info("Download #{problem.to_url} in #{problem.to_directory}")
-        problem.download(silent: silent, args: args)
+        problem.download(silent, oj_args)
         STDERR.puts
       end
     end
 
-    def prepare(*, silent, args)
+    def prepare(silent : Bool, oj_args : Array(String)?)
       each do |problem|
         OIJ.info("Prepare #{problem.to_url} in #{problem.to_directory}")
-        problem.prepare(silent: silent, args: args)
+        problem.prepare(silent, oj_args)
         STDERR.puts
       end
     end

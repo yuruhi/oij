@@ -23,7 +23,8 @@ module OIJ
   def self.print_file(file : Path) : Nil
     OIJ.error("Not found testcase file: #{file}") unless File.exists?(file)
     if printer = OIJ::Config.printer?
-      system "#{printer} #{file}"
+      OIJ.info_run(printer, [file])
+      Process.run(printer, args: [file], shell: true, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
     else
       OIJ.info("#{file} (#{File.size(file)} byte):")
       puts File.read(file), ""
@@ -35,7 +36,8 @@ module OIJ
       OIJ.error("Not found testcase file: #{file}") unless File.exists?(file)
     end
     if printer = OIJ::Config.printer?
-      system "#{printer} #{files.join(' ')}"
+      OIJ.info_run(printer, files.map(&.to_s), true)
+      Process.run(printer, files.map(&.to_s), shell: true, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
     else
       files.each do |file|
         OIJ.info("#{file} (#{File.size(file)} byte):")
@@ -45,19 +47,14 @@ module OIJ
   end
 
   def self.bundled_file(file : Path) : File
-    bundler = OIJ::Config.bundler?(file.extension[1..]).try &.replace_variables(file)
-    if bundler.nil?
-      return File.new(file)
-    end
-    File.tempfile("bundled", file.extension) do |tmp|
-      command = "#{bundler} #{file}"
-      OIJ.info("$ #{command}")
-      bundled = `#{command}`
-      if $?.success?
-        tmp.print bundled
-      else
-        OIJ.error("Failed to bundle: #{command}")
+    if command = OIJ::Config.bundler?(file.extension[1..]).try &.replace_variables(file)
+      File.tempfile("bundled", file.extension) do |tmp|
+        OIJ.info_run(command)
+        Process.run(command, shell: true, input: Process::Redirect::Inherit, output: tmp, error: Process::Redirect::Inherit)
+        OIJ.error("Failed to bundle: #{file}") unless $?.success?
       end
+    else
+      File.new(file)
     end
   end
 end

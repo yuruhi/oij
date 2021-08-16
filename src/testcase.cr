@@ -13,7 +13,10 @@ module OIJ
     File.touch(input)
     File.touch(output)
     OIJ.info("Make testcase files: #{input} #{output}")
-    system "#{editor} #{input} #{output}"
+
+    args = {input.to_s, output.to_s}
+    OIJ.info_run(editor, args, true)
+    Process.run(editor, args, shell: true, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
   def self.print_testcase(name : String, dir : Path) : Nil

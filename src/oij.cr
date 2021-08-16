@@ -134,7 +134,7 @@ module OIJ
       define_argument file, required: true
 
       def run
-        Problem.current.bundle_and_submit(Path[arguments.file], args: OIJ.after_two_hyphens)
+        Problem.current.bundle_and_submit(Path[arguments.file], OIJ.after_two_hyphens)
       end
     end
 
@@ -144,7 +144,7 @@ module OIJ
       OIJ.define_problem_flags
 
       def run
-        get_problem.download(silent: flags.silent, args: OIJ.after_two_hyphens)
+        get_problem.download(flags.silent, OIJ.after_two_hyphens)
       end
     end
 
@@ -154,7 +154,7 @@ module OIJ
       OIJ.define_contest_flags
 
       def run
-        get_contest.download(silent: flags.silent, args: OIJ.after_two_hyphens)
+        get_contest.download(flags.silent, OIJ.after_two_hyphens)
       end
     end
 
@@ -180,7 +180,7 @@ module OIJ
 
       def run
         problem = get_problem
-        problem.prepare(silent: true, args: OIJ.after_two_hyphens)
+        problem.prepare(true, OIJ.after_two_hyphens)
         puts problem.to_directory
       end
     end
@@ -190,7 +190,7 @@ module OIJ
       OIJ.define_contest_flags
 
       def run
-        get_contest.prepare(silent: true, args: OIJ.after_two_hyphens)
+        get_contest.prepare(true, OIJ.after_two_hyphens)
       end
     end
 
@@ -227,7 +227,8 @@ module OIJ
       def run
         OIJ.hack(Path[arguments.hack], flags.hack_option,
           Path[arguments.generator], flags.generator_option,
-          Path[arguments.solver], flags.solver_option)
+          Path[arguments.solver], flags.solver_option,
+          OIJ.after_two_hyphens)
       end
     end
 
