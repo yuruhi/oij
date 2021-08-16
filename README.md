@@ -222,11 +222,11 @@ bundler:
 `bundler` が設定されている場合はそのコマンドが出力した内容が提出されます。
 
 ```sh
-~/contest/AtCoder/agc001/agc001_a$ oij s a.rb
+/home/user/contest/AtCoder/agc001/agc001_a$ oij s a.rb
 [INFO] $ oj s https://atcoder.jp/contests/abc213/tasks/abc213_a a.rb
 ...
 
-~/contest/AtCoder/agc001/agc001_a$ oij s a.cr
+/home/user/contest/AtCoder/agc001/agc001_a$ oij s a.cr
 [INFO] $ cr-bundle a.cr
 [INFO] $ oj s https://atcoder.jp/contests/abc213/tasks/abc213_a /tmp/bundled.e3lK5W.cr
 ...
@@ -238,11 +238,11 @@ bundler:
 `--` の後のオプションはそのまま `oj` に渡されます。
 
 ```sh
-~/contest/AtCoder/agc001/agc001_a$ oij d
+/home/user/contest/AtCoder/agc001/agc001_a$ oij d
 [INFO] $ oj d https://atcoder.jp/contests/agc001/tasks/agc001_a
 
-~/contest/AtCoder/agc001/agc001_a$ oij d --atcoder agc001_b
-[INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_b # at ~/contest/AtCoder/agc001/agc001_b
+/home/user/contest/AtCoder/agc001/agc001_a$ oij d --atcoder agc001_b
+[INFO] $ oj d https://atcoder.jp/contests/abc213/tasks/abc213_b # at /home/user/contest/AtCoder/agc001/agc001_b
 ```
 
 ### `download-contest`, `dc`
@@ -399,7 +399,7 @@ $ oij pc --atcoder abc006
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/oij/fork>)
+1. Fork it (<https://github.com/yuruhi/oij/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -407,4 +407,4 @@ $ oij pc --atcoder abc006
 
 ## Contributors
 
--   [yuruhi](https://github.com/your-github-user) - creator and maintainer
+-   [yuruhi](https://github.com/yuruhi) - creator and maintainer
