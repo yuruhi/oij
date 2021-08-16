@@ -25,9 +25,10 @@ module OIJ
       define_help short: h, description: "Execute given file."
       define_argument file, required: true
       define_argument input_file
+      define_flag option, short: o
 
       def run
-        OIJ.execute(Path[arguments.file], arguments.input_file)
+        OIJ.execute(Path[arguments.file], flags.option, arguments.input_file)
       end
     end
 
@@ -38,16 +39,17 @@ module OIJ
       define_flag option, short: o
 
       def run
-        OIJ.run(Path[arguments.file], arguments.input_file, flags.option)
+        OIJ.run(Path[arguments.file], flags.option, arguments.input_file)
       end
     end
 
     class Test < Admiral::Command
       define_help short: h, description: "Test given file."
       define_argument file, required: true
+      define_flag option, short: o
 
       def run
-        OIJ.test(Path[arguments.file], OIJ.after_two_hyphens)
+        OIJ.test(Path[arguments.file], flags.option, OIJ.after_two_hyphens)
       end
     end
 
@@ -197,7 +199,7 @@ module OIJ
     class GenerateInput < Admiral::Command
       define_help short: h, description: "Generate input"
       define_argument generator, required: true
-      define_argument count : Int32, default: 100, required: true
+      define_argument count : Int32, default: 100
       define_flag option, short: o
 
       def run
@@ -223,12 +225,20 @@ module OIJ
       define_flag hack_option, short: h
       define_flag generator_option, short: g
       define_flag solver_option, short: s
+      define_flag option, short: o
 
       def run
-        OIJ.hack(Path[arguments.hack], flags.hack_option,
-          Path[arguments.generator], flags.generator_option,
-          Path[arguments.solver], flags.solver_option,
-          OIJ.after_two_hyphens)
+        if flags.option
+          OIJ.hack(Path[arguments.hack], flags.option,
+            Path[arguments.generator], flags.option,
+            Path[arguments.solver], flags.option,
+            OIJ.after_two_hyphens)
+        else
+          OIJ.hack(Path[arguments.hack], flags.hack_option,
+            Path[arguments.generator], flags.generator_option,
+            Path[arguments.solver], flags.solver_option,
+            OIJ.after_two_hyphens)
+        end
       end
     end
 
