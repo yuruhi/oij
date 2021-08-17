@@ -56,7 +56,7 @@ module OIJ
     args = ["test", "-c", execute_command(file, option)]
     args.concat oj_args if oj_args
     OIJ.info_run "oj", args
-    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
   def self.compile_and_test(file : Path, option : String?, oj_args : Array(String)?)

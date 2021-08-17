@@ -9,7 +9,7 @@ module OIJ
     args.concat oj_args if oj_args
 
     OIJ.info_run("oj", args)
-    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
   def self.generate_output(solver : Path, option : String?, oj_args : Array(String)?)
@@ -19,7 +19,7 @@ module OIJ
     args.concat oj_args if oj_args
 
     OIJ.info_run("oj", args)
-    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 
   def self.hack(hack : Path, hack_option : String?,
@@ -39,6 +39,6 @@ module OIJ
     args.concat oj_args if oj_args
 
     OIJ.info_run("oj", args)
-    Process.run("oj", args: args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
   end
 end

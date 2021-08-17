@@ -24,7 +24,7 @@ module OIJ
     OIJ.error("Not found testcase file: #{file}") unless File.exists?(file)
     if printer = OIJ::Config.printer?
       OIJ.info_run(printer, [file])
-      Process.run(printer, args: [file], shell: true, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+      Process.run(printer, [file], shell: true, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
     else
       OIJ.info("#{file} (#{File.size(file)} byte):")
       puts File.read(file), ""
