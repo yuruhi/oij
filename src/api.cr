@@ -3,7 +3,9 @@ require "./utility"
 
 module OIJ
   def self.oj_api(command : String, url : String) : JSON::Any
-    json = JSON.parse `oj-api #{command} #{url} 2> #{File::NULL}`
+    process = Process.new "oj-api", [command, url], output: Process::Redirect::Pipe
+    json = JSON.parse process.output
+
     case status = json["status"].as_s
     when "ok"
       json["result"]
@@ -17,7 +19,9 @@ module OIJ
   end
 
   def self.oj_api_success?(command : String, url : String) : Bool
-    json = JSON.parse `oj-api #{command} #{url} 2> #{File::NULL}`
+    process = Process.new "oj-api", [command, url], output: Process::Redirect::Pipe
+    json = JSON.parse process.output
+
     case status = json["status"].as_s
     when "ok"
       true
