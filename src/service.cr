@@ -40,7 +40,7 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(silent : Bool, oj_args : Array(String)?) : Nil
+    def download(oj_args : Array(String)?, *, silent : Bool) : Nil
       dir = to_directory
       unless Dir.exists?(dir)
         Dir.mkdir_p(dir)
@@ -86,8 +86,8 @@ module OIJ
       submit(Path[bundled.path], oj_args)
     end
 
-    def prepare(silent : Bool, oj_args : Array(String)?) : Nil
-      download(silent, oj_args)
+    def prepare(oj_args : Array(String)?, *, silent : Bool) : Nil
+      download(oj_args, silent: silent)
       OIJ.generate_all_templates
     end
   end
@@ -126,18 +126,18 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(silent : Bool, oj_args : Array(String)?)
+    def download(oj_args : Array(String)?, *, silent : Bool)
       each do |problem|
         OIJ.info("Download #{problem.to_url} in #{problem.to_directory}")
-        problem.download(silent, oj_args)
+        problem.download(oj_args, silent: silent)
         STDERR.puts
       end
     end
 
-    def prepare(silent : Bool, oj_args : Array(String)?)
+    def prepare(oj_args : Array(String)?, *, silent : Bool)
       each do |problem|
         OIJ.info("Prepare #{problem.to_url} in #{problem.to_directory}")
-        problem.prepare(silent, oj_args)
+        problem.prepare(oj_args, silent: silent)
         STDERR.puts
       end
     end

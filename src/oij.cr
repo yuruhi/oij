@@ -17,11 +17,8 @@ module OIJ
       define_flag option, short: o
 
       def run
-        if file = arguments.file
-          OIJ.compile(file, flags.option)
-        else
-          OIJ.compile(OIJ.guess_program_file, flags.option)
-        end
+        file = arguments.file || OIJ.guess_program_file
+        OIJ.compile(file, flags.option)
       end
     end
 
@@ -101,7 +98,7 @@ module OIJ
 
     class Submit < Admiral::Command
       define_help short: h, description: "Submit bundled file."
-      define_argument file
+      define_argument file : Path
 
       def run
         file = arguments.file || OIJ.guess_program_file
@@ -113,7 +110,7 @@ module OIJ
       define_help short: h, description: "Edit given testcase."
       define_argument name, required: true
 
-      define_flag dir : Path, default: "test", short: d,
+      define_flag dir : Path, default: Path["test"], short: d,
         description: "Specify directory name for testcases."
 
       def run
@@ -124,7 +121,7 @@ module OIJ
     class PrintTestcase < Admiral::Command
       define_help short: h, description: "Print given testcase."
       define_argument name, required: true
-      define_flag dir : Path, default: "test", short: d,
+      define_flag dir : Path, default: Path["test"], short: d,
         description: "Specify directory name for testcases."
 
       def run
@@ -174,7 +171,7 @@ module OIJ
       OIJ.define_problem_flags
 
       def run
-        get_problem.download(flags.silent, OIJ.after_two_hyphens)
+        get_problem.download(OIJ.after_two_hyphens, silent: flags.silent)
       end
     end
 
@@ -184,7 +181,7 @@ module OIJ
       OIJ.define_contest_flags
 
       def run
-        get_contest.download(flags.silent, OIJ.after_two_hyphens)
+        get_contest.download(OIJ.after_two_hyphens, silent: flags.silent)
       end
     end
 
@@ -210,7 +207,7 @@ module OIJ
 
       def run
         problem = get_problem
-        problem.prepare(true, OIJ.after_two_hyphens)
+        problem.prepare(OIJ.after_two_hyphens, silent: true)
         puts problem.to_directory
       end
     end
@@ -220,7 +217,7 @@ module OIJ
       OIJ.define_contest_flags
 
       def run
-        get_contest.prepare(true, OIJ.after_two_hyphens)
+        get_contest.prepare(OIJ.after_two_hyphens, silent: true)
       end
     end
 
