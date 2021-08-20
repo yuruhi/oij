@@ -24,6 +24,8 @@ $ cp bin/oij <your favorite bin>
 
 ## 使い方
 
+![oij.gif](https://raw.githubusercontent.com/yuruhi/oij/images/oij.gif)
+
 `oij` の設定は `~/.config/oij/config.yml` で行えます。
 
 ### コマンド一覧
