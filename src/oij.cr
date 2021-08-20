@@ -1,10 +1,9 @@
-require "admiral"
+require "./cli_helper"
 require "./command"
 require "./random_test"
 require "./testcase"
 require "./template"
 require "./service"
-require "./cli_helper"
 require "./file"
 
 module OIJ
@@ -14,12 +13,12 @@ module OIJ
 
     class Compile < Admiral::Command
       define_help short: h, description: "Compile given file."
-      define_argument file
+      define_argument file : Path
       define_flag option, short: o
 
       def run
         if file = arguments.file
-          OIJ.compile(Path[file], flags.option)
+          OIJ.compile(file, flags.option)
         else
           OIJ.compile(OIJ.guess_program_file, flags.option)
         end
@@ -70,42 +69,33 @@ module OIJ
 
     class Test < Admiral::Command
       define_help short: h, description: "Test given file."
-      define_argument file
+      define_argument file : Path
       define_flag option, short: o
 
       def run
-        if file = arguments.file
-          OIJ.test(Path[file], flags.option, OIJ.after_two_hyphens)
-        else
-          OIJ.test(OIJ.guess_program_file, flags.option, OIJ.after_two_hyphens)
-        end
+        file = arguments.file || OIJ.guess_program_file
+        OIJ.test(file, flags.option, OIJ.after_two_hyphens)
       end
     end
 
     class CompileAndTest < Admiral::Command
       define_help short: h, description: "Compile and test given file."
-      define_argument file
+      define_argument file : Path
       define_flag option, short: o
 
       def run
-        if file = arguments.file
-          OIJ.compile_and_test(Path[file], flags.option, OIJ.after_two_hyphens)
-        else
-          OIJ.compile_and_test(OIJ.guess_program_file, flags.option, OIJ.after_two_hyphens)
-        end
+        file = arguments.file || OIJ.guess_program_file
+        OIJ.compile_and_test(file, flags.option, OIJ.after_two_hyphens)
       end
     end
 
     class Bundle < Admiral::Command
       define_help short: h, description: "Bundle given file"
-      define_argument file
+      define_argument file : Path
 
       def run
-        if file = arguments.file
-          Problem.current.bundle(Path[file])
-        else
-          Problem.current.bundle(OIJ.guess_program_file)
-        end
+        file = arguments.file || OIJ.guess_program_file
+        Problem.current.bundle(file)
       end
     end
 
@@ -114,11 +104,8 @@ module OIJ
       define_argument file
 
       def run
-        if file = arguments.file
-          Problem.current.bundle_and_submit(Path[file], OIJ.after_two_hyphens)
-        else
-          Problem.current.bundle_and_submit(OIJ.guess_program_file, OIJ.after_two_hyphens)
-        end
+        file = arguments.file || OIJ.guess_program_file
+        Problem.current.bundle_and_submit(file, OIJ.after_two_hyphens)
       end
     end
 
@@ -126,22 +113,22 @@ module OIJ
       define_help short: h, description: "Edit given testcase."
       define_argument name, required: true
 
-      define_flag dir : String, default: "test", short: d,
+      define_flag dir : Path, default: "test", short: d,
         description: "Specify directory name for testcases."
 
       def run
-        OIJ.edit_testcase(arguments.name, Path[flags.dir])
+        OIJ.edit_testcase(arguments.name, flags.dir)
       end
     end
 
     class PrintTestcase < Admiral::Command
       define_help short: h, description: "Print given testcase."
       define_argument name, required: true
-      define_flag dir : String, default: "test", short: d,
+      define_flag dir : Path, default: "test", short: d,
         description: "Specify directory name for testcases."
 
       def run
-        OIJ.print_testcase(arguments.name, Path[flags.dir])
+        OIJ.print_testcase(arguments.name, flags.dir)
       end
     end
 
@@ -239,30 +226,30 @@ module OIJ
 
     class GenerateInput < Admiral::Command
       define_help short: h, description: "Generate input"
-      define_argument generator, required: true
+      define_argument generator : Path, required: true
       define_argument count : Int32, default: 100
       define_flag option, short: o
 
       def run
-        OIJ.generate_input(Path[arguments.generator], flags.option, arguments.count, OIJ.after_two_hyphens)
+        OIJ.generate_input(arguments.generator, flags.option, arguments.count, OIJ.after_two_hyphens)
       end
     end
 
     class GenerateOutput < Admiral::Command
       define_help short: h, description: "Generate output"
-      define_argument solver, required: true
+      define_argument solver : Path, required: true
       define_flag option, short: o
 
       def run
-        OIJ.generate_output(Path[arguments.solver], flags.option, OIJ.after_two_hyphens)
+        OIJ.generate_output(arguments.solver, flags.option, OIJ.after_two_hyphens)
       end
     end
 
     class GenerateHackCase < Admiral::Command
       define_help short: h, description: "Find hack case"
-      define_argument hack, required: true, description: "Specify your wrong solution."
-      define_argument generator, required: true, description: "Specify program to generate test cases."
-      define_argument solver, required: true, description: "Specify program to generate correct answers."
+      define_argument hack : Path, required: true, description: "Specify your wrong solution."
+      define_argument generator : Path, required: true, description: "Specify program to generate test cases."
+      define_argument solver : Path, required: true, description: "Specify program to generate correct answers."
       define_flag hack_option, short: h
       define_flag generator_option, short: g
       define_flag solver_option, short: s
@@ -270,14 +257,14 @@ module OIJ
 
       def run
         if flags.option
-          OIJ.hack(Path[arguments.hack], flags.option,
-            Path[arguments.generator], flags.option,
-            Path[arguments.solver], flags.option,
+          OIJ.hack(arguments.hack, flags.option,
+            arguments.generator, flags.option,
+            arguments.solver, flags.option,
             OIJ.after_two_hyphens)
         else
-          OIJ.hack(Path[arguments.hack], flags.hack_option,
-            Path[arguments.generator], flags.generator_option,
-            Path[arguments.solver], flags.solver_option,
+          OIJ.hack(arguments.hack, flags.hack_option,
+            arguments.generator, flags.generator_option,
+            arguments.solver, flags.solver_option,
             OIJ.after_two_hyphens)
         end
       end

@@ -1,3 +1,11 @@
+require "admiral"
+
+struct Path
+  def Path.new(value : Admiral::StringValue)
+    Path.new(value.value)
+  end
+end
+
 module OIJ
   macro define_problem_flags
     define_argument url, description: "Specify problem url."
