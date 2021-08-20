@@ -556,6 +556,43 @@ $ oij edit-test r001 -d dir
 [INFO] $ vim dir/random-001.in dir/random-001.out
 ```
 
+### プログラムファイルの推測
+
+`compile`, `exe`, `run`, `test`, `t`, `bundle`, `submit` はプログラムファイルを指定しなかった場合、現在のディレクトリにあるファイルの内、変更日時が一番新しいものが渡されます。
+
+`exe`, `run` に一つの引数が与えられた場合、`.` が含まれていて、拡張子が `config.yml` の `compile` か `execute` にある場合はプログラムファイルだとみなされ、そうでない場合は入力ファイルだとみなされます。
+
+```yaml
+# config.yml
+compile:
+    cpp: "g++ ${file}"
+
+execute:
+    cpp: "./a.out"
+```
+
+```console
+$ oij run # same to `oij run a.cpp`
+[INFO] $ g++ a.cpp
+[INFO] $ ./a.out
+
+$ oij run a.cpp
+[INFO] $ g++ a.cpp
+[INFO] $ ./a.out
+
+$ oij run test/sample-1.in # same to `oij run a.cpp test/sample-1.in`
+[INFO] $ g++ a.cpp
+[INFO] $ ./a.out < test/sample-1.in
+
+$ oij run a.rb # same to `oij run a.cpp a.rb`
+[INFO] $ g++ a.cpp
+[INFO] $ ./a.out < a.rb
+
+$ oij run a.cpp test/sample-1.in
+[INFO] $ g++ a.cpp
+[INFO] $ ./a.out < test/sample-1.in
+```
+
 ### `config.yml` の例
 
 ```yaml

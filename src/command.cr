@@ -40,8 +40,8 @@ module OIJ
     system command
   end
 
-  def self.execute(file : Path, option : String?, input_file : String?)
-    input_file = normalize_input_file(input_file) if input_file
+  def self.execute(file : Path, option : String?, input : String?)
+    input_file = input.try { |s| normalize_input_file(s) }
     command = execute_command(file, option, input_file)
     OIJ.info_run command
     system command

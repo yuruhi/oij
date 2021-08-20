@@ -57,6 +57,26 @@ module OIJ
       File.new(file)
     end
   end
+
+  def self.program_file?(file : String) : Bool
+    return false unless File.file?(file) && file.includes?('.')
+    ext = Path[file].extension[1..]
+    OIJ::Config.compile_has_key?(ext) || OIJ::Config.execute_has_key?(ext)
+  end
+
+  def self.guess_program_file? : Path?
+    Dir.new(Dir.current).select { |file|
+      File.file?(file) && file.includes?('.')
+    }.max_by? { |file|
+      File.info(file).modification_time
+    }.try { |file|
+      Path[file]
+    }
+  end
+
+  def self.guess_program_file : Path
+    guess_program_file? || OIJ.error("Can't guess program file.")
+  end
 end
 
 class String

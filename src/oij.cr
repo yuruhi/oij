@@ -5,6 +5,7 @@ require "./testcase"
 require "./template"
 require "./service"
 require "./cli_helper"
+require "./file"
 
 module OIJ
   class CLI < Admiral::Command
@@ -13,22 +14,36 @@ module OIJ
 
     class Compile < Admiral::Command
       define_help short: h, description: "Compile given file."
-      define_argument file, required: true
+      define_argument file
       define_flag option, short: o
 
       def run
-        OIJ.compile(Path[arguments.file], flags.option)
+        if file = arguments.file
+          OIJ.compile(Path[file], flags.option)
+        else
+          OIJ.compile(OIJ.guess_program_file, flags.option)
+        end
       end
     end
 
     class Execute < Admiral::Command
       define_help short: h, description: "Execute given file."
-      define_argument file, required: true
+      define_argument file
       define_argument input_file
       define_flag option, short: o
 
       def run
-        OIJ.execute(Path[arguments.file], flags.option, arguments.input_file)
+        if (file = arguments.file).nil?
+          OIJ.execute(OIJ.guess_program_file, flags.option, nil)
+        elsif (input = arguments.input_file).nil?
+          if OIJ.program_file?(file)
+            OIJ.execute(Path[file], flags.option, nil)
+          else # file is input file
+            OIJ.execute(OIJ.guess_program_file, flags.option, file)
+          end
+        else
+          OIJ.execute(Path[file], flags.option, input)
+        end
       end
     end
 
@@ -39,27 +54,71 @@ module OIJ
       define_flag option, short: o
 
       def run
-        OIJ.run(Path[arguments.file], flags.option, arguments.input_file)
+        if (file = arguments.file).nil?
+          OIJ.run(OIJ.guess_program_file, flags.option, nil)
+        elsif (input = arguments.input_file).nil?
+          if OIJ.program_file?(file)
+            OIJ.run(Path[file], flags.option, nil)
+          else # file is input file
+            OIJ.run(OIJ.guess_program_file, flags.option, file)
+          end
+        else
+          OIJ.run(Path[file], flags.option, input)
+        end
       end
     end
 
     class Test < Admiral::Command
       define_help short: h, description: "Test given file."
-      define_argument file, required: true
+      define_argument file
       define_flag option, short: o
 
       def run
-        OIJ.test(Path[arguments.file], flags.option, OIJ.after_two_hyphens)
+        if file = arguments.file
+          OIJ.test(Path[file], flags.option, OIJ.after_two_hyphens)
+        else
+          OIJ.test(OIJ.guess_program_file, flags.option, OIJ.after_two_hyphens)
+        end
       end
     end
 
     class CompileAndTest < Admiral::Command
       define_help short: h, description: "Compile and test given file."
-      define_argument file, required: true
+      define_argument file
       define_flag option, short: o
 
       def run
-        OIJ.compile_and_test(Path[arguments.file], flags.option, OIJ.after_two_hyphens)
+        if file = arguments.file
+          OIJ.compile_and_test(Path[file], flags.option, OIJ.after_two_hyphens)
+        else
+          OIJ.compile_and_test(OIJ.guess_program_file, flags.option, OIJ.after_two_hyphens)
+        end
+      end
+    end
+
+    class Bundle < Admiral::Command
+      define_help short: h, description: "Bundle given file"
+      define_argument file
+
+      def run
+        if file = arguments.file
+          Problem.current.bundle(Path[file])
+        else
+          Problem.current.bundle(OIJ.guess_program_file)
+        end
+      end
+    end
+
+    class Submit < Admiral::Command
+      define_help short: h, description: "Submit bundled file."
+      define_argument file
+
+      def run
+        if file = arguments.file
+          Problem.current.bundle_and_submit(Path[file], OIJ.after_two_hyphens)
+        else
+          Problem.current.bundle_and_submit(OIJ.guess_program_file, OIJ.after_two_hyphens)
+        end
       end
     end
 
@@ -119,24 +178,6 @@ module OIJ
 
       def run
         puts get_contest.to_directory
-      end
-    end
-
-    class Bundle < Admiral::Command
-      define_help short: h, description: "Bundle given file"
-      define_argument file, required: true
-
-      def run
-        Problem.current.bundle(Path[arguments.file])
-      end
-    end
-
-    class Submit < Admiral::Command
-      define_help short: h, description: "Submit bundled file."
-      define_argument file, required: true
-
-      def run
-        Problem.current.bundle_and_submit(Path[arguments.file], OIJ.after_two_hyphens)
       end
     end
 
@@ -247,6 +288,8 @@ module OIJ
     register_sub_command "run", CompileAndExecute
     register_sub_command "test", Test
     register_sub_command "t", CompileAndTest
+    register_sub_command "bundle", Bundle
+    register_sub_command "submit", Submit, short: "s"
 
     register_sub_command "edit-test", EditTestcase, short: "et"
     register_sub_command "print-test", PrintTestcase, short: "pt"
@@ -256,9 +299,6 @@ module OIJ
 
     register_sub_command "dir", PorblemDirectory
     register_sub_command "dir-contest", ContestDirectory, short: "dirc"
-
-    register_sub_command "bundle", Bundle
-    register_sub_command "submit", Submit, short: "s"
 
     register_sub_command "download", DownloadProblem, short: "d"
     register_sub_command "download-contest", DownloadContest, short: "dc"

@@ -80,6 +80,11 @@ module OIJ
       def self.{{key.id}}(key : String, option : String?, &block)
         {{key.id}}?(key, option) || yield
       end
+
+      def self.{{key.id}}_has_key?(key : String)
+        elem = (config[{{key}}]? || return false).as_h? || OIJ.error(%[config[{{key}}] is not Hash])
+        elem.has_key?(key)
+      end
     end
 
     define_hash_getter2 "compile"
