@@ -9,7 +9,7 @@ require "./file"
 module OIJ
   class CLI < Admiral::Command
     define_help short: h, description: "oij is a competitive programming helper."
-    define_version "0.1.0", short: v
+    define_version "1.1.0", short: v
 
     class Compile < Admiral::Command
       define_help short: h, description: "Compile given file."
