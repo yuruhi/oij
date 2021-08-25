@@ -45,7 +45,7 @@ module OIJ
 
     class CompileAndExecute < Admiral::Command
       define_help short: h, description: "Compile and execute given file."
-      define_argument file, required: true
+      define_argument file
       define_argument input_file
       define_flag option, short: o
 
