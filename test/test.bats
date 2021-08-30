@@ -341,6 +341,7 @@ function teardown() {
 	cd ~/programming/contest/AtCoder/agc001/agc001_a
 
 	echo 'def f(x); x * 2; end' > lib.cr
+	sleep 1
 	echo 'require "./lib.cr"; p f(read_line)' > a.cr
 
 	run oij bundle a.cr
@@ -354,8 +355,6 @@ function teardown() {
 
 	run oij bundle
 	[ "$status" -eq 0 ]
-	echo "${lines[0]}" >&3
-	([[ "${lines[0]}" = *"$ cr-bundle -f a.cr" ]]; echo $?) >&3
 	[[ "${lines[0]}" = *"$ cr-bundle -f a.cr" ]]
 	[ "${lines[1]}" = '# require "./lib.cr"' ]
 	[ "${lines[2]}" = 'def f(x)' ]
