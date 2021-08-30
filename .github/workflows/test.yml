@@ -37,6 +37,8 @@ jobs:
 
             - name: Run bats
               run: |
+                  cp example/config.yml ~/.config/oij/config.yml
+                  cp example/template.cr ~/.config/oij/template.cr
                   cd test
                   bats test.bats
                   cd ..
