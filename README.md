@@ -1,5 +1,9 @@
 # oij
 
+[![Crystal CI](https://github.com/yuruhi/oij/workflows/test/badge.svg)](https://github.com/yuruhi/oij/actions?query=workflow%3A%22Crystal+CI%22)
+
+---
+
 `oij` は [online-judge-tools](https://github.com/online-judge-tools/oj) を URL の指定なしで使えるようにしたコマンドです。
 
 内部で [online-judge-tools](https://github.com/online-judge-tools/oj) と [online-judge-api-client](https://github.com/online-judge-tools/api-client) を使用しています。
