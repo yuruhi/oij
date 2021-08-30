@@ -1,0 +1,43 @@
+compile:
+    cr:
+        default: "crystal build ${file} --error-trace --progress"
+        release: "crystal build ${file} --error-trace --no-debug --release --progress"
+        release-time: "crystal build ${file} --error-trace --no-debug --release --progress"
+    cpp:
+        default: "g++-9 -Wall -g -fsanitize=undefined,address -std=c++17 -Wfatal-errors ${file}"
+        fast: "g++-9 -Wall -std=c++17 -O3 -Wfatal-errors ${file}"
+        hack: "g++ ${file} -o ${basename_no_extension}"
+
+execute:
+    cr:
+        default: "./${basename_no_extension}"
+        release: "./${basename_no_extension}"
+        release-time: "time ./${basename_no_extension}"
+    cpp:
+        default: "./a.out"
+        hack: "./${basename_no_extension}"
+    rb: "ruby ${file}"
+
+path:
+    atcoder: "~/programming/contest/AtCoder"
+    yukicoder: "~/programming/contest/yukicoder"
+    codeforces: "~/programming/contest/Codeforces"
+
+bundler:
+    cr: 'cr-bundle -f ${file}'
+    cpp: 'oj-bundle -I /home/yuruhiya/programming/ ${file}'
+
+template:
+    cr: ["~/.config/oij/template.cr", "a.cr"]
+
+editor: "vim"
+
+input_file_mapping:
+    - ["^s(\\d+)$", "test/sample-\\1.in"]
+    - ["^c(\\d+)$", "test/corner-\\1.in"]
+    - ["^h(\\d+)$", "test/hack-\\1.in"]
+
+testcase_mapping:
+    - ["^s(\\d+)$", "sample-\\1"]
+    - ["^c(\\d+)$", "corner-\\1"]
+    - ["^h(\\d+)$", "hack-\\1"]
