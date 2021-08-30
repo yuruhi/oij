@@ -6,6 +6,16 @@ function teardown() {
 	(find -type d | grep -v '^.$' | xargs rmdir) || true
 }
 
+@test "dependencies" {
+	oij -h
+	oj -h
+	oj-api -h
+	cr-bundle -h
+	vim -h
+	crystal -h
+	ruby -h
+}
+
 @test "-v, --version" {
 	run oij -v
 	[ $status -eq 0 ]
