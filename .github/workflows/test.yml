@@ -43,9 +43,12 @@ jobs:
                   cd test
 
                   # debug
+                  mkdir -p ~/programming/contest/AtCoder/agc001/agc001_a
+                  cd ~/programming/contest/AtCoder/agc001/agc001_a
                   echo 'def f(x); x * 2; end' > lib.cr
                   echo 'require "./lib.cr"; p f(read_line)' > a.cr
                   oij bundle a.cr
+                  cd -
 
                   bats test.bats
                   cd ..
