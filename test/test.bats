@@ -344,6 +344,8 @@ function teardown() {
 	echo 'require "./lib.cr"; p f(read_line)' > a.cr
 
 	run oij bundle a.cr
+	echo "${lines[0]}" >&3
+	([[ "${lines[0]}" = *"$ cr-bundle -f a.cr" ]]; echo $?) >&3
 	[ "$status" -eq 0 ]
 	[[ "${lines[0]}" = *"$ cr-bundle -f a.cr" ]]
 	[ "${lines[1]}" = '# require "./lib.cr"' ]
