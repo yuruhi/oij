@@ -211,9 +211,9 @@ https://atcoder.jp/contests/agc001
 ```yaml
 # config.yml
 path:
-    atcoder: "/home/user/contest/AtCoder"
-    yukicoder: "/home/user/contest/yukicoder"
-    codeforces: "/home/user/contest/Codeforces"
+    atcoder: "~/contest/AtCoder"
+    yukicoder: "~/contest/yukicoder"
+    codeforces: "~/contest/Codeforces"
 ```
 
 ```console
@@ -300,8 +300,8 @@ $ oij dc --atcoder abc005 -s
 
 ```yaml
 template:
-    cr: ["/home/user/.config/oij/template.cr", "a.cr"]
-    cpp: ["/home/user/.config/oij/template.cpp", "a.cpp"]
+    cr: ["~/.config/oij/template.cr", "a.cr"]
+    cpp: ["~/.config/oij/template.cpp", "a.cpp"]
 ```
 
 ```console
@@ -619,17 +619,17 @@ execute:
     txt: "cat ${file}"
 
 path:
-    atcoder: "/home/user/contest/AtCoder"
-    yukicoder: "/home/user/contest/yukicoder"
-    codeforces: "/home/user/contest/Codeforces"
+    atcoder: "~/contest/AtCoder"
+    yukicoder: "~/contest/yukicoder"
+    codeforces: "~/contest/Codeforces"
 
 bundler:
     cpp: "oj-bundle -I path/to/your/library ${file}"
     cr: "cr-bundle -f ${file}"
 
 template:
-    cpp: ["/home/user/.config/oij/template.cpp", "a.cpp"]
-    cr: ["/home/user/.config/oij/template.cr", "a.cr"]
+    cpp: ["~/.config/oij/template.cpp", "a.cpp"]
+    cr: ["~/.config/oij/template.cr", "a.cr"]
 
 editor: "vim"
 

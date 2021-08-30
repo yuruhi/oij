@@ -90,7 +90,7 @@ module OIJ
     define_hash_getter2 "compile"
     define_hash_getter2 "execute"
     define_hash_getter "path" do
-      Path[e.as_s? || OIJ.error(%[config[path][#{key}] is not String])]
+      Path[e.as_s? || OIJ.error(%[config[path][#{key}] is not String])].expand(home: true)
     end
     define_hash_getter "bundler", String
 
@@ -99,7 +99,7 @@ module OIJ
       unless array.size == 2 && array[0].as_s? && array[1].as_s?
         OIJ.error(%[config[template][#{key}] is not [String, String]])
       end
-      array.map { |s| Path[s.as_s] }
+      array.map { |s| Path[s.as_s].expand(home: true) }
     end
 
     define_getter "editor", String
