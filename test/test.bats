@@ -344,9 +344,8 @@ function teardown() {
 	echo 'require "./lib.cr"; p f(read_line)' > a.cr
 
 	run oij bundle a.cr
-	echo $lines >&3
 	[ "$status" -eq 0 ]
-	[[ "${lines[0]}" = *'$ cr-bundle -f a.cr' ]]
+	[[ "${lines[0]}" = *"$ cr-bundle -f a.cr" ]]
 	[ "${lines[1]}" = '# require "./lib.cr"' ]
 	[ "${lines[2]}" = 'def f(x)' ]
 	[ "${lines[3]}" = '  x * 2' ]
@@ -355,7 +354,7 @@ function teardown() {
 
 	run oij bundle
 	[ "$status" -eq 0 ]
-	[[ "${lines[0]}" = *'$ cr-bundle -f a.cr' ]]
+	[[ "${lines[0]}" = *"$ cr-bundle -f a.cr" ]]
 	[ "${lines[1]}" = '# require "./lib.cr"' ]
 	[ "${lines[2]}" = 'def f(x)' ]
 	[ "${lines[3]}" = '  x * 2' ]
@@ -364,7 +363,7 @@ function teardown() {
 
 	run oij bundle b.cr
 	[ "$status" -eq 1 ]
-	[[ "${lines[0]}" = *'$ cr-bundle -f b.cr' ]]
+	[[ "${lines[0]}" = *"$ cr-bundle -f b.cr" ]]
 
 	cd $BATS_TEST_DIRNAME
 }
