@@ -1,0 +1,37 @@
+name: test
+
+on: push
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+
+            - name: Set up Crystal
+              uses: oprypin/install-crystal@v1
+              with:
+                  crystal: latest
+
+            - name: Install shards
+              run: shards install
+
+            - name: Install online-judge-tools
+              run: pip3 install -U online-judge-verify-helper
+
+            - name: Setup BATS
+              uses: mig4/setup-bats@v1
+              with:
+                  bats-version: 1.2.1
+
+            - name: Run format check
+              run: crystal tool format --check
+
+            - name: Run Ameba
+              run: bin/ameba
+
+            - name: Run bats
+              run: |
+                  cd test
+                  bats test.bats
+                  cd ..
