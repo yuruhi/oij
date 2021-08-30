@@ -24,6 +24,11 @@ jobs:
               with:
                   bats-version: 1.2.1
 
+            - name: Build oij
+              run: |
+                  shards build
+                  echo `pwd`/bin >> $GITHUB_PATH
+
             - name: Run format check
               run: crystal tool format --check
 
