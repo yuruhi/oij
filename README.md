@@ -373,7 +373,7 @@ $ oij gi generate.cr
 [INFO] $ oj generate-input ./generate 100
 ...
 
-$ oij gi generate.cr
+$ oij gi generate.cr 10 -- -d=dir
 [INFO] $ crystal build generate.cr
 [INFO] $ oj generate-input ./generate 10 -d=dir
 ...
