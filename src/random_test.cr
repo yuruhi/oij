@@ -2,7 +2,7 @@ require "./command"
 
 module OIJ
   def self.generate_input(generator : Path, option : String?, count : Int32?, oj_args : Array(String)?)
-    compile?(generator, option) || OIJ.error("Compile error: #{generator}")
+    compile?(generator, option) { |status| OIJ.error("Compile error: #{generator}", status.exit_code) }
 
     args = ["generate-input", execute_command(generator, option)]
     args << count.to_s if count
@@ -13,7 +13,7 @@ module OIJ
   end
 
   def self.generate_output(solver : Path, option : String?, oj_args : Array(String)?)
-    compile?(solver, option) || OIJ.error("Compile error: #{solver}")
+    compile?(solver, option) { |status| OIJ.error("Compile error: #{solver}", status.exit_code) }
 
     args = ["generate-output", "-c", execute_command(solver, option)]
     args.concat oj_args if oj_args
@@ -26,9 +26,9 @@ module OIJ
                 generator : Path, generator_option : String?,
                 solver : Path, solver_option : String?,
                 oj_args : Array(String)?)
-    compile?(hack, hack_option) || OIJ.error("Compile error: #{hack}")
-    compile?(generator, generator_option) || OIJ.error("Compile error: #{generator}")
-    compile?(solver, solver_option) || OIJ.error("Compile error: #{solver}")
+    compile?(hack, hack_option) { |status| OIJ.error("Compile error: #{hack}", status.exit_code) }
+    compile?(generator, generator_option) { |status| OIJ.error("Compile error: #{generator}", status.exit_code) }
+    compile?(solver, solver_option) { |status| OIJ.error("Compile error: #{solver}", status.exit_code) }
 
     args = [
       "generate-input",

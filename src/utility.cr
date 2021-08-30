@@ -5,15 +5,15 @@ module OIJ
     STDERR << '[' << title.colorize(color) << ']' << ' ' << message << '\n'
   end
 
-  def self.error(message)
+  def self.error(message, exit_code = 1)
     put_message("ERROR", :red, message)
-    exit(1)
+    exit(exit_code)
   end
 
-  def self.error(message, &block)
+  def self.error(message, exit_code = 1, &block)
     put_message("ERROR", :red, message)
     yield
-    exit(1)
+    exit(exit_code)
   end
 
   def self.warning(message)
@@ -26,5 +26,14 @@ module OIJ
 
   def self.info_run(command : String, args : Enumerable(String)? = nil, shell : Bool = false)
     OIJ.info "$ #{Crystal::System::Process.prepare_args(command, args, shell).join(' ')}"
+  end
+
+  def self.exit_with_message(status : Process::Status, &message)
+    if status.success?
+      exit
+    else
+      put_message("ERROR", :red, yield)
+      exit(status.exit_code)
+    end
   end
 end

@@ -51,7 +51,7 @@ module OIJ
       File.tempfile("bundled", file.extension) do |tmp|
         OIJ.info_run(command)
         Process.run(command, shell: true, input: Process::Redirect::Inherit, output: tmp, error: Process::Redirect::Inherit)
-        OIJ.error("Failed to bundle: #{file}") unless $?.success?
+        OIJ.error("Failed to bundle: #{file}", $?.exit_code) unless $?.success?
       end
     else
       File.new(file)

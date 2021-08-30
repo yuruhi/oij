@@ -40,7 +40,7 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(oj_args : Array(String)?, *, silent : Bool) : Nil
+    private def download_internal(oj_args : Array(String)?, *, silent : Bool, &block)
       dir = to_directory
       unless Dir.exists?(dir)
         Dir.mkdir_p(dir)
@@ -52,11 +52,22 @@ module OIJ
       args.concat oj_args if oj_args
       OIJ.info_run("oj", args)
       Process.run("oj", args, output: silent ? Process::Redirect::Close : Process::Redirect::Inherit, error: Process::Redirect::Inherit)
-
-      OIJ.warning("Failed to download: #{to_url}") unless $?.success?
+      yield $?
     end
 
-    def submit(file : Path, oj_args : Array(String)?) : Nil
+    def download(oj_args : Array(String)?, *, silent : Bool) : NoReturn
+      download_internal(oj_args, silent: silent) do |status|
+        OIJ.exit_with_message(status) { "Failed to download: #{to_url}" }
+      end
+    end
+
+    def download_inline(oj_args : Array(String)?, *, silent : Bool) : Nil
+      download_internal(oj_args, silent: silent) do |status|
+        OIJ.warning("Failed to download: #{to_url}") unless status.success?
+      end
+    end
+
+    def submit(file : Path, oj_args : Array(String)?) : NoReturn
       dir = to_directory
       unless Dir.exists?(dir)
         OIJ.error("No such directory: #{dir}")
@@ -67,9 +78,10 @@ module OIJ
       args.concat oj_args if oj_args
       OIJ.info_run("oj", args)
       Process.run("oj", args, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+      OIJ.exit_with_message($?) { "Failed to submit: #{file}" }
     end
 
-    def bundle(file : Path) : Nil
+    def bundle(file : Path) : NoReturn
       dir = to_directory
       unless Dir.exists?(dir)
         OIJ.error("No such directory: #{dir}")
@@ -78,7 +90,8 @@ module OIJ
 
       command = OIJ::Config.bundler(file.extension[1..]).replace_variables(file)
       OIJ.info_run(command)
-      system command
+      system(command)
+      OIJ.exit_with_message($?) { "Failed to bundle: #{file}" }
     end
 
     def bundle_and_submit(file : Path, oj_args : Array(String)?) : Nil
@@ -87,7 +100,7 @@ module OIJ
     end
 
     def prepare(oj_args : Array(String)?, *, silent : Bool) : Nil
-      download(oj_args, silent: silent)
+      download_inline(oj_args, silent: silent)
       OIJ.generate_all_templates
     end
   end
@@ -126,10 +139,10 @@ module OIJ
       from_directory(Path[Dir.current])
     end
 
-    def download(oj_args : Array(String)?, *, silent : Bool)
+    def download_inline(oj_args : Array(String)?, *, silent : Bool)
       each do |problem|
         OIJ.info("Download #{problem.to_url} in #{problem.to_directory}")
-        problem.download(oj_args, silent: silent)
+        problem.download_inline(oj_args, silent: silent)
         STDERR.puts
       end
     end

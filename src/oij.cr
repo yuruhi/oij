@@ -181,7 +181,7 @@ module OIJ
       OIJ.define_contest_flags
 
       def run
-        get_contest.download(OIJ.after_two_hyphens, silent: flags.silent)
+        get_contest.download_inline(OIJ.after_two_hyphens, silent: flags.silent)
       end
     end
 
