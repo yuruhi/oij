@@ -38,14 +38,14 @@ jobs:
             - name: Run bats
               run: |
                   mkdir -p ~/.config/oij
+                  cp example/config.yml ~/.config/oij/config.yml
+                  cp example/template.cr ~/.config/oij/template.cr
+                  cd test
 
                   # debug
                   echo 'def f(x); x * 2; end' > lib.cr
                   echo 'require "./lib.cr"; p f(read_line)' > a.cr
                   oij bundle a.cr
 
-                  cp example/config.yml ~/.config/oij/config.yml
-                  cp example/template.cr ~/.config/oij/template.cr
-                  cd test
                   bats test.bats
                   cd ..
