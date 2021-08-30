@@ -10,6 +10,7 @@ module OIJ
 
     OIJ.info_run("oj", args)
     Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    exit $?.exit_code
   end
 
   def self.generate_output(solver : Path, option : String?, oj_args : Array(String)?)
@@ -20,6 +21,7 @@ module OIJ
 
     OIJ.info_run("oj", args)
     Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    exit $?.exit_code
   end
 
   def self.hack(hack : Path, hack_option : String?,
@@ -40,5 +42,6 @@ module OIJ
 
     OIJ.info_run("oj", args)
     Process.run("oj", args, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
+    exit $?.exit_code
   end
 end
