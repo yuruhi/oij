@@ -24,8 +24,8 @@ module OIJ
     put_message("INFO", :blue, message)
   end
 
-  def self.info_run(command : String, args : Enumerable(String)? = nil, shell : Bool = false)
-    OIJ.info "$ #{Crystal::System::Process.prepare_args(command, args, shell).join(' ')}"
+  def self.info_run(command : String, args : Enumerable(String)? = nil, shell : Bool = false, message : String = "")
+    OIJ.info "$ #{Crystal::System::Process.prepare_args(command, args, shell).join(' ')}#{message.empty? ? "" : " (#{message})"}"
   end
 
   def self.exit_with_message(status : Process::Status, &message)

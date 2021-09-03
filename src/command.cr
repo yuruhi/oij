@@ -13,18 +13,12 @@ module OIJ
       OIJ.error "Not found compile command: #{file.extension}" + (option.nil? ? "" : " (option: #{option})")
   end
 
-  def self.execute_command(file : Path, option : String?, input_file : Path? = nil) : String
+  def self.execute_command(file : Path, option : String?) : String
     extension = file.extension[1..]
-    command = OIJ::Config.execute(extension, option) {
+    OIJ::Config.execute(extension, option) {
       OIJ.error "Not found execute command: #{file.extension}" +
                 (option.nil? ? "" : " (option: #{option})")
     }.replace_variables(file)
-    if input_file
-      OIJ.error("Not found input file: #{input_file}") unless File.exists?(input_file)
-      "#{command} < #{input_file}"
-    else
-      command
-    end
   end
 
   def self.compile?(file : Path, option : String?, &error) : Bool
@@ -53,18 +47,15 @@ module OIJ
 
   def self.execute(file : Path, option : String?, input : String?, &error)
     input_file = input.try { |s| normalize_input_file(s) }
-    command = execute_command(file, option, input_file)
-    OIJ.info_run command
-    system(command)
+    command = execute_command(file, option)
+    OIJ.info_run command, message: input_file ? "input file: #{input_file}" : ""
+    input_stdio = input_file ? File.new(input_file) : Process::Redirect::Inherit
+    Process.run command, shell: true, input: input_stdio, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit
     yield $?
   end
 
   def self.execute(file : Path, option : String?, input : String?) : NoReturn
-    input_file = input.try { |s| normalize_input_file(s) }
-    command = execute_command(file, option, input_file)
-    OIJ.info_run command
-    system command
-    exit $?.exit_code
+    execute(file, option, input) { |status| exit status.exit_code }
   end
 
   def self.run(file : Path, option : String?, input_file : String?) : NoReturn
