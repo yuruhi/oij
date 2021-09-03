@@ -104,12 +104,12 @@ $ oij exe a.cr
 10 # output
 
 $ oij exe a.cr input
-[INFO] $ ./a < input
+[INFO] $ ./a (input file: input)
 6
 
 $ oij run a.cr input
 [INFO] $ crystal build a.cr
-[INFO] $ ./a < input
+[INFO] $ ./a (input file: input)
 6
 ```
 
@@ -530,10 +530,10 @@ input_file_mapping:
 
 ```console
 $ oij exe a.rb s1
-[INFO] $ ruby a.rb < test/sample-1.in
+[INFO] $ ruby a.rb (input file: test/sample-1.in)
 
 $ oij exe a.rb h001
-[INFO] $ ruby a.rb < test/random-001.in
+[INFO] $ ruby a.rb (input file: test/random-001.in)
 ```
 
 ### `testcase_mapping`
@@ -588,15 +588,15 @@ $ oij run a.cpp
 
 $ oij run test/sample-1.in # same to `oij run a.cpp test/sample-1.in`
 [INFO] $ g++ a.cpp
-[INFO] $ ./a.out < test/sample-1.in
+[INFO] $ ./a.out (input file: test/sample-1.in)
 
 $ oij run a.rb # same to `oij run a.cpp a.rb`
 [INFO] $ g++ a.cpp
-[INFO] $ ./a.out < a.rb
+[INFO] $ ./a.out (input file: a.rb)
 
 $ oij run a.cpp test/sample-1.in
 [INFO] $ g++ a.cpp
-[INFO] $ ./a.out < test/sample-1.in
+[INFO] $ ./a.out (input file: test/sample-1.in)
 ```
 
 ### `config.yml` の例
