@@ -72,12 +72,12 @@ function teardown() {
 
 	run oij exe a.rb input
 	[ $status -eq 0 ]
-	[[ "${lines[0]}" == *"$ ruby a.rb < input" ]]
+	[[ "${lines[0]}" == *"$ ruby a.rb (input file: input)" ]]
 	[ "${lines[1]}" = "6" ]
 
 	run oij exe input
 	[ $status -eq 0 ]
-	[[ "${lines[0]}" = *"$ ruby a.rb < input" ]]
+	[[ "${lines[0]}" = *"$ ruby a.rb (input file: input)" ]]
 	[ "${lines[1]}" = "6" ]
 }
 
@@ -106,7 +106,7 @@ function teardown() {
 	run oij run a.cr input
 	[ $status -eq 0 ]
 	[[ "${lines[0]}" = *"$ crystal build a.cr"* ]]
-	[[ "${lines[-2]}" = *"$ ./a < input" ]]
+	[[ "${lines[-2]}" = *"$ ./a (input file: input)" ]]
 	[ "${lines[-1]}" = "6" ]
 }
 @test "run (with inputfile)" {
@@ -116,7 +116,7 @@ function teardown() {
 	run oij run input
 	[ $status -eq 0 ]
 	[[ "${lines[0]}" = *"$ crystal build a.cr"* ]]
-	[[ "${lines[-2]}" = *"$ ./a < input" ]]
+	[[ "${lines[-2]}" = *"$ ./a (input file: input)" ]]
 	[ "${lines[-1]}" = "6" ]
 }
 
