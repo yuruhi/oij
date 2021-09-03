@@ -1,6 +1,6 @@
 # oij
 
-[![Crystal CI](https://github.com/yuruhi/oij/workflows/test/badge.svg)](https://github.com/yuruhi/oij/actions?query=workflow%3A%22Crystal+CI%22)
+[![test](https://github.com/yuruhi/oij/workflows/test/badge.svg)](https://github.com/yuruhi/oij/actions?query=workflow%3A%22test%22)
 
 ---
 
